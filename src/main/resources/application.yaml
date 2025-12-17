@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: pbo
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
