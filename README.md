@@ -368,7 +368,7 @@ Jika masih ada masalah:
 
 ---
 
-## 🚀 Quick Start (TL;DR)
+##  Quick Start (TL;DR)
 
 ```bash
 # 1. Buat database
