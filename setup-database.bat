@@ -26,6 +26,16 @@ if %ERRORLEVEL% EQU 0 (
     goto :error
 )
 
+
+echo [3] Creating BOOKING table...
+psql -U postgres -d flybook -f src/main/resources/booking_schema.sql
+if %ERRORLEVEL% EQU 0 (
+    echo     [OK] Booking table created successfully!
+) else (
+    echo     [ERROR] Failed to create booking table
+    goto :error
+)
+
 echo.
 echo ========================================
 echo Database setup completed successfully!
