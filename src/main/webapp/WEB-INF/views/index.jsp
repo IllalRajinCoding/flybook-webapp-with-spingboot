@@ -60,6 +60,9 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       body {
         background-color: #f3f4f6;
       }
+      html {
+        scroll-behavior: smooth;
+      }
 
       /* 3D Ticket Style (Static) */
       .ticket-3d {
@@ -179,10 +182,9 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       </div>
     </nav>
 
-    <section
-      class="bg-brand h-[450px] relative flex items-center px-6 overflow-hidden"
-    >
-      <div class="absolute inset-0 opacity-10 pointer-events-none">
+    <section class="bg-brand min-h-[500px] relative flex items-center px-6">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 opacity-5">
         <svg width="100%" height="100%">
           <pattern
             id="grid"
@@ -202,54 +204,80 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       </div>
 
       <div
-        class="max-w-7xl mx-auto grid lg:grid-cols-2 items-center relative z-10 w-full"
+        class="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-12 relative z-10 w-full py-12"
       >
-        <div class="text-white space-y-4">
-          <h1 class="text-5xl font-bold leading-tight">
-            Terbang Lebih Tinggi, <br />Bayar Lebih Pintar.
+        <!-- Left Content -->
+        <div class="text-white space-y-6">
+          <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
+            Pesan Tiket Pesawat<br />dengan Mudah
           </h1>
-          <p class="text-blue-100 text-lg max-w-md">
-            Layanan penerbangan premium dengan harga yang masuk akal. Mulai
-            perjalanan Anda hari ini.
+          <p class="text-blue-100 text-lg max-w-md leading-relaxed">
+            Platform pemesanan tiket pesawat terpercaya dengan harga terbaik.
           </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex gap-4 pt-4">
+            <a
+              href="#search-section"
+              class="px-8 py-3 bg-white text-brand font-semibold rounded-lg hover:bg-gray-100 transition"
+            >
+              Cari Penerbangan
+            </a>
+            <c:if test="${not empty sessionScope.userName}">
+              <a
+                href="/dashboard/user"
+                class="px-8 py-3 bg-transparent text-white font-semibold rounded-lg hover:bg-white/10 transition border-2 border-white"
+              >
+                Dashboard
+              </a>
+            </c:if>
+          </div>
         </div>
+
+        <!-- Right Content - Simple Ticket -->
         <div class="hidden lg:flex justify-end">
           <div
-            class="ticket-3d bg-white w-[380px] rounded-2xl p-6 relative overflow-hidden text-slate-800"
+            class="bg-white w-[380px] rounded-xl p-6 text-slate-800 shadow-xl"
           >
-            <div class="flex justify-between items-start mb-8">
+            <div class="flex justify-between items-start mb-6">
               <div>
-                <p
-                  class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter"
-                >
+                <p class="text-xs text-gray-500 uppercase mb-1">
                   Business Class
                 </p>
-                <h3 class="text-xl font-bold">Boarding Pass</h3>
+                <h3 class="text-xl font-bold text-brand">Boarding Pass</h3>
               </div>
-              <i class="fas fa-barcode text-3xl opacity-20"></i>
+              <div class="text-brand">
+                <i class="fas fa-qrcode text-2xl"></i>
+              </div>
             </div>
+
             <div class="flex justify-between items-center mb-6">
               <div>
-                <p class="text-3xl font-black">JKT</p>
-                <p class="text-[10px] text-gray-500">Jakarta</p>
+                <p class="text-3xl font-bold text-brand">JKT</p>
+                <p class="text-xs text-gray-500 mt-1">Jakarta</p>
               </div>
               <div class="flex-1 px-4 flex flex-col items-center">
-                <i class="fas fa-plane text-brand text-sm mb-1"></i>
+                <i class="fas fa-plane text-brand mb-2"></i>
                 <div class="w-full h-px bg-gray-200"></div>
               </div>
               <div class="text-right">
-                <p class="text-3xl font-black">LND</p>
-                <p class="text-[10px] text-gray-500">London</p>
+                <p class="text-3xl font-bold text-brand">DPS</p>
+                <p class="text-xs text-gray-500 mt-1">Bali</p>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 text-xs">
+
+            <div class="grid grid-cols-3 gap-4 text-sm border-t pt-4">
               <div>
-                <p class="text-gray-400">Penumpang</p>
-                <p class="font-bold">Eka Putra</p>
+                <p class="text-gray-500 text-xs mb-1">Penumpang</p>
+                <p class="font-semibold">John Doe</p>
+              </div>
+              <div>
+                <p class="text-gray-500 text-xs mb-1">Tanggal</p>
+                <p class="font-semibold">05 Jan</p>
               </div>
               <div class="text-right">
-                <p class="text-gray-400">Kursi</p>
-                <p class="font-bold">12A</p>
+                <p class="text-gray-500 text-xs mb-1">Kursi</p>
+                <p class="font-semibold">12A</p>
               </div>
             </div>
           </div>
@@ -257,41 +285,32 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-6 relative z-20">
-      <div
-        class="search-container bg-white rounded-xl shadow-2xl p-1 border border-gray-100"
-      >
+    <section class="max-w-7xl mx-auto px-6 relative z-20" id="search-section">
+      <div class="search-container bg-white rounded-xl shadow-lg p-2">
         <div
-          class="flex gap-8 px-6 py-4 border-b border-gray-100 text-xs font-bold text-gray-500"
+          class="flex gap-6 px-6 py-4 border-b text-xs font-semibold text-gray-600"
         >
-          <button class="text-brand border-b-2 border-brand pb-4 -mb-4.5">
-            <i class="fas fa-plane mr-2"></i>TIKET PESAWAT
-          </button>
-          <button class="hover:text-brand transition">
-            <i class="fas fa-hotel mr-2"></i>HOTEL
-          </button>
-          <button class="hover:text-brand transition">
-            <i class="fas fa-suitcase mr-2"></i>PAKET WISATA
+          <button class="text-brand border-b-2 border-brand pb-1">
+            TIKET PESAWAT
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 items-center p-6 gap-4">
-          <div class="space-y-1">
-            <label class="text-[10px] font-bold text-gray-400 uppercase"
-              >Dari</label
-            >
-            <div class="relative">
-              <i
-                class="fas fa-map-marker-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none z-10"
-              ></i>
+        <div class="p-6">
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end gap-4"
+          >
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-600 uppercase">
+                Dari
+              </label>
               <select
                 id="origin"
-                class="w-full pl-9 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-700 transition cursor-pointer hover:border-gray-300"
+                class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:border-brand focus:ring-1 focus:ring-brand outline-none"
               >
                 <option value="">Pilih Kota Asal</option>
                 <option value="Jakarta">Jakarta (CGK)</option>
                 <option value="Surabaya">Surabaya (SUB)</option>
-                <option value="Bali">Bali / Denpasar (DPS)</option>
+                <option value="Bali">Bali (DPS)</option>
                 <option value="Medan">Medan (KNO)</option>
                 <option value="Makassar">Makassar (UPG)</option>
                 <option value="Yogyakarta">Yogyakarta (JOG)</option>
@@ -305,23 +324,19 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <option value="Palembang">Palembang (PLM)</option>
               </select>
             </div>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-bold text-gray-400 uppercase"
-              >Ke</label
-            >
-            <div class="relative">
-              <i
-                class="fas fa-paper-plane absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none z-10"
-              ></i>
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-600 uppercase">
+                Ke
+              </label>
               <select
                 id="dest"
-                class="w-full pl-9 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-700 transition cursor-pointer hover:border-gray-300"
+                class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:border-brand focus:ring-1 focus:ring-brand outline-none"
               >
                 <option value="">Pilih Kota Tujuan</option>
                 <option value="Jakarta">Jakarta (CGK)</option>
                 <option value="Surabaya">Surabaya (SUB)</option>
-                <option value="Bali">Bali / Denpasar (DPS)</option>
+                <option value="Bali">Bali (DPS)</option>
                 <option value="Medan">Medan (KNO)</option>
                 <option value="Makassar">Makassar (UPG)</option>
                 <option value="Yogyakarta">Yogyakarta (JOG)</option>
@@ -338,25 +353,26 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                 <option value="Kuala Lumpur">Kuala Lumpur (KUL)</option>
               </select>
             </div>
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] font-bold text-gray-400 uppercase"
-              >Tanggal</label
-            >
-            <input
-              type="date"
-              id="date"
-              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-brand transition"
-            />
-          </div>
-          <div class="pt-5">
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-600 uppercase">
+                Tanggal
+              </label>
+              <input
+                type="date"
+                id="date"
+                class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:border-brand focus:ring-1 focus:ring-brand outline-none"
+              />
+            </div>
+
             <button
               onclick="searchFlights()"
               id="searchBtn"
-              class="w-full bg-brand text-white py-3.5 rounded font-bold text-sm shadow-lg hover:bg-blue-900 transition flex items-center justify-center gap-3"
+              class="w-full bg-brand text-white py-3 rounded-lg font-semibold text-sm hover:bg-blue-900 transition flex items-center justify-center gap-2"
             >
-              <span id="btnText">CARI PENERBANGAN</span>
+              <span id="btnText">Cari Penerbangan</span>
               <div id="loader" class="loader"></div>
+              <i class="fas fa-search" id="searchIcon"></i>
             </button>
           </div>
         </div>
@@ -365,22 +381,114 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
     <main id="results" class="max-w-7xl mx-auto px-6 py-16 hidden">
       <div class="flex justify-between items-center mb-8">
-        <h2 class="text-xl font-bold">Hasil Pencarian</h2>
-        <p id="count" class="text-sm text-gray-500 font-medium"></p>
+        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+          <i class="fas fa-plane-departure text-brand"></i>
+          <span>Hasil Pencarian</span>
+        </h2>
+        <p
+          id="count"
+          class="text-sm text-gray-500 font-medium bg-gray-100 px-4 py-2 rounded-full"
+        ></p>
       </div>
       <div id="flightGrid" class="space-y-4"></div>
     </main>
 
-    <footer class="mt-auto py-12 border-t border-gray-200 text-center">
-      <p class="text-xs text-gray-400 font-medium uppercase tracking-widest">
-        &copy; 2024 FlyBook - Official Ticketing Platform
-      </p>
+    <!-- Features Section -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div
+            class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-3"
+          >
+            <i class="fas fa-shield-alt text-brand text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Aman & Terpercaya</h3>
+          <p class="text-sm text-gray-600">
+            Transaksi aman dengan sistem keamanan berlapis
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-3"
+          >
+            <i class="fas fa-tags text-brand text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Harga Terbaik</h3>
+          <p class="text-sm text-gray-600">
+            Dapatkan harga tiket terbaik untuk semua rute
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div
+            class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-3"
+          >
+            <i class="fas fa-headset text-brand text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Layanan 24/7</h3>
+          <p class="text-sm text-gray-600">
+            Customer service siap membantu Anda kapan saja
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-8 mb-8">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i class="fas fa-plane-departure text-xl"></i>
+              <span class="text-xl font-bold">FlyBook</span>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Platform pemesanan tiket pesawat terpercaya di Indonesia
+            </p>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-3">Perusahaan</h4>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition">Tentang Kami</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition">Hubungi Kami</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-semibold mb-3">Bantuan</h4>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li>
+                <a href="#" class="hover:text-white transition"
+                  >Pusat Bantuan</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition"
+                  >Syarat & Ketentuan</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-6 text-center">
+          <p class="text-sm text-gray-400">
+            &copy; 2024 FlyBook. All rights reserved.
+          </p>
+        </div>
+      </div>
     </footer>
 
     <script>
       function searchFlights() {
         const btnText = document.getElementById("btnText");
         const loader = document.getElementById("loader");
+        const searchIcon = document.getElementById("searchIcon");
         const results = document.getElementById("results");
         const flightGrid = document.getElementById("flightGrid");
         const countText = document.getElementById("count");
@@ -393,6 +501,7 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
         // UI Loading
         btnText.style.display = "none";
+        searchIcon.style.display = "none";
         loader.style.display = "block";
 
         setTimeout(() => {
@@ -406,52 +515,69 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           if (filtered.length > 0) {
             filtered.forEach((f) => {
               flightGrid.innerHTML += `
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col md:flex-row overflow-hidden hover:shadow-md transition">
-                                <div class="p-6 flex-1 relative">
-                                    <div class="ticket-notch-top"></div>
-                                    <div class="ticket-notch-bottom"></div>
-                                    <div class="flex justify-between items-start mb-6">
-                                        <div class="flex items-center gap-4">
-                                            <div class="w-12 h-12 bg-gray-50 rounded border flex items-center justify-center text-brand">
-                                                <i class="fas fa-plane text-lg"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold">\${f.maskapai}</h4>
-                                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">\${f.kode}</p>
-                                            </div>
-                                        </div>
-                                        <span class="text-[10px] font-bold px-2 py-1 bg-green-100 text-green-700 rounded uppercase">Tersedia</span>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="text-center"><p class="text-2xl font-black">\${f.jamBerangkat}</p><p class="text-[10px] font-bold text-gray-500 uppercase">\${f.asal}</p></div>
-                                        <div class="flex-1 px-8 flex flex-col items-center opacity-30">
-                                            <p class="text-[9px] font-bold mb-1 uppercase tracking-widest">Langsung</p>
-                                            <div class="w-full h-px bg-slate-900 relative"><i class="fas fa-circle absolute left-0 -top-0.5 text-[4px]"></i><i class="fas fa-circle absolute right-0 -top-0.5 text-[4px]"></i></div>
-                                        </div>
-                                        <div class="text-center"><p class="text-2xl font-black">\${f.jamTiba}</p><p class="text-[10px] font-bold text-gray-500 uppercase">\${f.tujuan}</p></div>
-                                    </div>
-                                </div>
-                                <div class="bg-slate-50 border-l border-dashed border-gray-200 p-8 md:w-64 flex flex-col justify-center items-center text-center">
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Mulai Dari</p>
-                                    <h3 class="text-xl font-black text-brand mb-4">Rp \${f.harga.toLocaleString()}</h3>
-                                    <a href="/dashboard/user/tiket/\${f.id}/book" class="w-full bg-brand text-white py-2 rounded text-xs font-bold hover:bg-blue-900 transition shadow-lg shadow-blue-200">PILIH</a>
-                                    <p class="text-[9px] font-bold text-gray-400 mt-4 uppercase tracking-tighter italic">Sisa \${f.kursiSisa} Kursi</p>
-                                </div>
-                            </div>
-                        `;
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
+                  <div class="p-6 flex-1 relative">
+                    <div class="flex justify-between items-start mb-6">
+                      <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand to-blue-700 rounded-xl flex items-center justify-center text-white shadow-lg">
+                          <i class="fas fa-plane text-xl"></i>
+                        </div>
+                        <div>
+                          <h4 class="font-bold text-lg text-gray-900">\${f.maskapai}</h4>
+                          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">\${f.kode}</p>
+                        </div>
+                      </div>
+                      <span class="text-xs font-bold px-3 py-1.5 bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 rounded-full border border-green-200">
+                        <i class="fas fa-check-circle mr-1"></i>Tersedia
+                      </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <div class="text-center">
+                        <p class="text-3xl font-black text-brand">\${f.jamBerangkat}</p>
+                        <p class="text-xs font-bold text-gray-500 uppercase mt-1">\${f.asal}</p>
+                      </div>
+                      <div class="flex-1 px-8 flex flex-col items-center">
+                        <p class="text-[10px] font-bold mb-2 uppercase tracking-widest text-gray-400">Langsung</p>
+                        <div class="w-full h-0.5 bg-gradient-to-r from-transparent via-gray-300 to-transparent relative">
+                          <i class="fas fa-circle absolute left-0 -top-1 text-[6px] text-brand"></i>
+                          <i class="fas fa-plane absolute left-1/2 -translate-x-1/2 -top-2 text-brand text-xs"></i>
+                          <i class="fas fa-circle absolute right-0 -top-1 text-[6px] text-brand"></i>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-3xl font-black text-brand">\${f.jamTiba}</p>
+                        <p class="text-xs font-bold text-gray-500 uppercase mt-1">\${f.tujuan}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gradient-to-br from-slate-50 to-blue-50 border-l border-gray-200 p-8 md:w-72 flex flex-col justify-center items-center text-center">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2 tracking-wider">Mulai Dari</p>
+                    <h3 class="text-2xl font-black text-brand mb-5">Rp \${f.harga.toLocaleString()}</h3>
+                    <a href="/dashboard/user/tiket/\${f.id}/book" 
+                      class="w-full bg-gradient-to-r from-brand to-blue-700 text-white py-3 rounded-xl text-sm font-bold hover:shadow-xl transition-all duration-300 hover:scale-105 mb-3">
+                      <i class="fas fa-ticket-alt mr-2"></i>PILIH
+                    </a>
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-tighter flex items-center gap-2">
+                      <i class="fas fa-chair text-brand"></i>
+                      <span>Sisa \${f.kursiSisa} Kursi</span>
+                    </p>
+                  </div>
+                </div>
+              `;
             });
             countText.innerText = filtered.length + " Penerbangan ditemukan";
           } else {
             flightGrid.innerHTML =
-              '<p class="text-center py-12 text-gray-400 font-medium">Penerbangan tidak ditemukan.</p>';
+              '<div class="bg-white rounded-xl p-16 text-center shadow-sm"><div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-plane-slash text-gray-400 text-3xl"></i></div><p class="text-gray-600 font-semibold mb-2">Penerbangan tidak ditemukan</p><p class="text-gray-400 text-sm">Coba ubah kriteria pencarian Anda</p></div>';
             countText.innerText = "0 Penerbangan";
           }
 
           results.classList.remove("hidden");
           btnText.style.display = "block";
+          searchIcon.style.display = "block";
           loader.style.display = "none";
           results.scrollIntoView({ behavior: "smooth" });
-        }, 1000);
+        }, 1200);
       }
     </script>
   </body>

@@ -16,15 +16,20 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: { sans: ["Inter", "sans-serif"] },
-          },
-        },
-      };
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com">
+      </link>
+          <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  fontFamily: { sans: ["Inter", "sans-serif"] },
+                },
+              },
+            };
     </script>
   </head>
   <body class="bg-gray-50 font-sans">
@@ -32,14 +37,22 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <nav class="bg-white border-b sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-          <div class="flex items-center">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-plane-departure text-blue-600 text-lg"></i>
             <h1 class="text-xl font-bold text-gray-900">FlyBook</h1>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-700">${sessionScope.userName}</span>
-            <a href="/logout" class="text-sm text-gray-600 hover:text-gray-900"
-              >Logout</a
+            <span class="text-sm text-gray-700 flex items-center gap-2">
+              <i class="fas fa-user-circle"></i>
+              ${sessionScope.userName}
+            </span>
+            <a
+              href="/logout"
+              class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2"
             >
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
           </div>
         </div>
       </div>
@@ -130,6 +143,16 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                     <div class="text-xs text-gray-500">
                       ${booking.jumlahKursi} kursi
                     </div>
+                  </div>
+
+                  <div class="mt-4 pt-4 border-t">
+                    <a
+                      href="/dashboard/tiket/${booking.tiketId}"
+                      class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+                    >
+                      <i class="fas fa-info-circle"></i>
+                      <span>Lihat Detail</span>
+                    </a>
                   </div>
                 </div>
               </div>
