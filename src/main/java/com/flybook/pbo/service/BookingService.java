@@ -1,13 +1,13 @@
 package com.flybook.pbo.service;
 
-import com.flybook.pbo.model.Booking;
-import com.flybook.pbo.model.Tiket;
-import com.flybook.pbo.repository.BookingRepository;
-import com.flybook.pbo.repository.TiketRepository;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.flybook.pbo.model.Booking;
+import com.flybook.pbo.model.Tiket;
+import com.flybook.pbo.repository.BookingRepository;
+import com.flybook.pbo.repository.TiketRepository;
 
 public class BookingService {
 
@@ -20,19 +20,19 @@ public class BookingService {
         if (tiket == null) {
             return false;
         }
-        
+
         // Check seat availability
         int availableSeats = tiket.getKursiTersedia() - tiket.getKursiTerjual();
         if (availableSeats < jumlahKursi) {
             return false;
         }
-        
+
         // Generate booking code
         String bookingCode = generateBookingCode();
-        
+
         // Calculate total price
         double totalHarga = tiket.getHarga() * jumlahKursi;
-        
+
         // Create booking
         Booking booking = new Booking(bookingCode, tiketId, userName, jumlahKursi, totalHarga);
         return BookingRepository.create(booking);
@@ -67,7 +67,7 @@ public class BookingService {
         if (booking == null) {
             return false;
         }
-        
+
         // If status changed to success, update tiket seats
         if ("success".equals(status) && !"success".equals(booking.getStatus())) {
             Tiket tiket = TiketRepository.getById(booking.getTiketId());
@@ -76,7 +76,7 @@ public class BookingService {
                 TiketRepository.update(tiket);
             }
         }
-        
+
         // If status changed from success to other, decrease tiket seats
         if (!"success".equals(status) && "success".equals(booking.getStatus())) {
             Tiket tiket = TiketRepository.getById(booking.getTiketId());
@@ -85,7 +85,7 @@ public class BookingService {
                 TiketRepository.update(tiket);
             }
         }
-        
+
         return BookingRepository.updateStatus(id, status);
     }
 

@@ -1,327 +1,154 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+pageEncoding="UTF-8"%> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
+<%-- Check if user is logged in and is admin --%>
+<c:if test="${empty sessionScope.userName || sessionScope.userRole != 'admin'}">
+  <c:redirect url="/login" />
+</c:if>
+
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tambah Tiket - FlyBook Admin</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ["Poppins", "sans-serif"] },
+            fontFamily: { sans: ["Inter", "sans-serif"] },
           },
         },
       };
     </script>
   </head>
-  <body class="bg-stone-50 font-sans antialiased">
-    <!-- Sidebar -->
-    <aside
-      class="fixed left-0 top-0 h-screen w-64 bg-stone-900 text-white p-6 z-40"
-    >
-      <div class="flex items-center gap-2 mb-10">
-        <div
-          class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-stone-900"
-        >
-          <i class="fas fa-plane text-sm"></i>
-        </div>
-        <div>
-          <span class="font-bold text-xl block">FlyBook.</span>
-          <span class="text-xs text-stone-400">Admin Panel</span>
+  <body class="bg-gray-50 font-sans">
+    <nav class="bg-white border-b sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <h1 class="text-xl font-bold text-gray-900">FlyBook Admin</h1>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-700">${sessionScope.userName}</span>
+            <a href="/logout" class="text-sm text-gray-600 hover:text-gray-900">Logout</a>
+          </div>
         </div>
       </div>
+    </nav>
 
-      <nav class="space-y-2">
-        <a
-          href="/dashboard/admin"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white font-medium"
-        >
-          <i class="fas fa-home w-5"></i>
-          <span>Dashboard</span>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <div class="mb-6">
+        <a href="/dashboard/admin" class="text-sm text-blue-600 hover:text-blue-800 mb-2 inline-flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Kembali ke Dashboard
         </a>
-        <a
-          href="/dashboard/admin/tiket/create"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-medium"
-        >
-          <i class="fas fa-plane w-5"></i>
-          <span>Tiket</span>
-        </a>
-      </nav>
+        <h2 class="text-2xl font-bold text-gray-900">Tambah Tiket Baru</h2>
+        <p class="text-gray-600 mt-1">Masukkan detail penerbangan di bawah ini</p>
+      </div>
 
-      <button
-        onclick="logout()"
-        class="w-full mt-10 bg-red-600 hover:bg-red-700 px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2"
-      >
-        <i class="fas fa-sign-out-alt"></i>
-        Logout
-      </button>
-    </aside>
+      <div class="bg-white rounded-lg p-6 max-w-4xl">
+        <form action="/dashboard/admin/tiket/store" method="post">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="space-y-4">
+                    <h3 class="font-semibold text-gray-900 border-b pb-2">Informasi Penerbangan</h3>
+                    
+                    <div>
+                        <label for="nomorTiket" class="block text-sm font-medium text-gray-700 mb-1">Nomor Tiket</label>
+                        <input type="text" id="nomorTiket" name="nomorTiket" required placeholder="Contoh: GA-101"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                    </div>
 
-    <!-- Main Content -->
-    <main class="ml-64 p-8">
-      <div class="max-w-2xl">
-        <!-- Header -->
-        <div class="mb-8">
-          <div class="flex items-center gap-3 mb-2">
-            <a
-              href="/dashboard/admin"
-              class="text-stone-500 hover:text-stone-700"
-            >
-              <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1 class="text-3xl font-bold text-stone-900">Tambah Tiket Baru</h1>
-          </div>
-          <p class="text-stone-600">
-            Masukkan informasi tiket penerbangan baru
-          </p>
-        </div>
+                    <div>
+                        <label for="maskapai" class="block text-sm font-medium text-gray-700 mb-1">Maskapai</label>
+                        <input type="text" id="maskapai" name="maskapai" required placeholder="Garuda Indonesia"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                    </div>
 
-        <!-- Form Card -->
-        <div class="bg-white rounded-2xl shadow-sm p-8">
-          <form
-            action="/dashboard/admin/tiket/store"
-            method="post"
-            class="space-y-6"
-          >
-            <!-- Nomor Tiket -->
-            <div>
-              <label
-                for="nomorTiket"
-                class="block text-sm font-medium text-stone-900 mb-2"
-              >
-                Nomor Tiket <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="nomorTiket"
-                name="nomorTiket"
-                required
-                class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Contoh: GA-001"
-              />
+                    <div>
+                        <label for="penerbangan" class="block text-sm font-medium text-gray-700 mb-1">Kode Penerbangan</label>
+                        <input type="text" id="penerbangan" name="penerbangan" required placeholder="GA-101"
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="bandaraAsal" class="block text-sm font-medium text-gray-700 mb-1">Bandara Asal</label>
+                            <input type="text" id="bandaraAsal" name="bandara_asal" required placeholder="Jakarta (CGK)"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                        </div>
+                        <div>
+                            <label for="bandaraTujuan" class="block text-sm font-medium text-gray-700 mb-1">Bandara Tujuan</label>
+                            <input type="text" id="bandaraTujuan" name="bandara_tujuan" required placeholder="Bali (DPS)"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-semibold text-gray-900 border-b pb-2">Jadwal & Harga</h3>
+
+                    <div>
+                        <label for="tanggalBerangkat" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berangkat</label>
+                        <input type="date" id="tanggalBerangkat" name="tanggalBerangkat" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-gray-600" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="jamBerangkat" class="block text-sm font-medium text-gray-700 mb-1">Jam Berangkat</label>
+                            <input type="time" id="jamBerangkat" name="jamBerangkat" required
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-gray-600" />
+                        </div>
+                        <div>
+                            <label for="jamTiba" class="block text-sm font-medium text-gray-700 mb-1">Jam Tiba</label>
+                            <input type="time" id="jamTiba" name="jamTiba" required
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-gray-600" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="harga" class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                            <input type="number" id="harga" name="harga" required placeholder="1000000"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                        </div>
+                        <div>
+                            <label for="kursiTersedia" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Kursi</label>
+                            <input type="number" id="kursiTersedia" name="kursiTersedia" required placeholder="100"
+                                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="status" name="status" required
+                            class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Non-aktif</option>
+                            <option value="penuh">Penuh</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <!-- Penerbangan -->
-            <div>
-              <label
-                for="penerbangan"
-                class="block text-sm font-medium text-stone-900 mb-2"
-              >
-                Penerbangan <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="penerbangan"
-                name="penerbangan"
-                required
-                class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Contoh: Garuda Indonesia 001"
-              />
+            <div class="flex items-center justify-end gap-3 pt-4 border-t mt-4">
+                <a href="/dashboard/admin" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Batal
+                </a>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Simpan Tiket
+                </button>
             </div>
 
-            <!-- Maskapai -->
-            <div>
-              <label
-                for="maskapai"
-                class="block text-sm font-medium text-stone-900 mb-2"
-              >
-                Maskapai <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="maskapai"
-                name="maskapai"
-                required
-                class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Contoh: Garuda Indonesia"
-              />
-            </div>
-
-            <!-- Row 1: Bandara Asal & Tujuan -->
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  for="bandaraAsal"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Bandara Asal <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="bandaraAsal"
-                  name="bandara_asal"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Jakarta (CGK)"
-                />
-              </div>
-              <div>
-                <label
-                  for="bandaraTujuan"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Bandara Tujuan <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="bandaraTujuan"
-                  name="bandara_tujuan"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Bali (DPS)"
-                />
-              </div>
-            </div>
-
-            <!-- Row 2: Tanggal & Jam -->
-            <div class="grid grid-cols-3 gap-4">
-              <div>
-                <label
-                  for="tanggalBerangkat"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Tanggal Berangkat <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  id="tanggalBerangkat"
-                  name="tanggalBerangkat"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="jamBerangkat"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Jam Berangkat <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="time"
-                  id="jamBerangkat"
-                  name="jamBerangkat"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label
-                  for="jamTiba"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Jam Tiba <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="time"
-                  id="jamTiba"
-                  name="jamTiba"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <!-- Row 3: Harga & Kursi -->
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  for="harga"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Harga (Rp) <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="harga"
-                  name="harga"
-                  step="10000"
-                  required
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="1500000"
-                />
-              </div>
-              <div>
-                <label
-                  for="kursiTersedia"
-                  class="block text-sm font-medium text-stone-900 mb-2"
-                >
-                  Jumlah Kursi <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="kursiTersedia"
-                  name="kursiTersedia"
-                  required
-                  min="1"
-                  class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="180"
-                />
-              </div>
-            </div>
-
-            <!-- Status -->
-            <div>
-              <label
-                for="status"
-                class="block text-sm font-medium text-stone-900 mb-2"
-              >
-                Status <span class="text-red-500">*</span>
-              </label>
-              <select
-                id="status"
-                name="status"
-                required
-                class="w-full px-4 py-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="aktif">Aktif</option>
-                <option value="nonaktif">Non-aktif</option>
-                <option value="penuh">Penuh</option>
-              </select>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex gap-4 pt-6">
-              <button
-                type="submit"
-                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition"
-              >
-                <i class="fas fa-check mr-2"></i>Simpan Tiket
-              </button>
-              <a
-                href="/dashboard/admin"
-                class="flex-1 bg-stone-300 hover:bg-stone-400 text-stone-900 font-medium py-3 rounded-xl transition text-center"
-              >
-                <i class="fas fa-times mr-2"></i>Batal
-              </a>
-            </div>
-          </form>
-        </div>
+        </form>
       </div>
     </main>
-
-    <script>
-      function logout() {
-        if (confirm("Apakah Anda yakin ingin logout?")) {
-          window.location.href = "/logout";
-        }
-      }
-    </script>
   </body>
 </html>
