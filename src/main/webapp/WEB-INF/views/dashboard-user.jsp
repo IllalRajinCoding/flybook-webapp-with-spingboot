@@ -60,6 +60,43 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Success Notification -->
+      <c:if
+        test="${not empty param.success || not empty sessionScope.successMessage}"
+      >
+        <div
+          id="successNotification"
+          class="mb-6 bg-green-50 border-l-4 border-green-500 rounded-lg p-4 flex items-start gap-3 shadow-sm animate-slide-down"
+        >
+          <div class="flex-shrink-0">
+            <div
+              class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center"
+            >
+              <i class="fas fa-check text-white text-lg"></i>
+            </div>
+          </div>
+          <div class="flex-1">
+            <h4 class="text-sm font-semibold text-green-800 mb-1">Berhasil!</h4>
+            <p class="text-sm text-green-700">
+              <c:choose>
+                <c:when test="${not empty sessionScope.successMessage}">
+                  ${sessionScope.successMessage}
+                </c:when>
+                <c:otherwise>
+                  Tiket berhasil dipesan. Pesanan Anda sedang diproses.
+                </c:otherwise>
+              </c:choose>
+            </p>
+          </div>
+          <button
+            onclick="closeNotification()"
+            class="flex-shrink-0 text-green-500 hover:text-green-700 transition"
+          >
+            <i class="fas fa-times text-lg"></i>
+          </button>
+        </div>
+      </c:if>
+
       <!-- Header -->
       <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
@@ -297,6 +334,54 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
           }
         });
       }
+
+      function closeNotification() {
+        const notification = document.getElementById("successNotification");
+        if (notification) {
+          notification.style.animation = "slide-up 0.3s ease-out";
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }
+      }
+
+      // Auto-hide notification after 5 seconds
+      window.addEventListener("DOMContentLoaded", () => {
+        const notification = document.getElementById("successNotification");
+        if (notification) {
+          setTimeout(() => {
+            closeNotification();
+          }, 5000);
+        }
+      });
     </script>
+
+    <style>
+      @keyframes slide-down {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slide-up {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+      }
+
+      .animate-slide-down {
+        animation: slide-down 0.3s ease-out;
+      }
+    </style>
   </body>
 </html>
