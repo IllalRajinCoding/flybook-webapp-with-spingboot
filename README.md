@@ -2,7 +2,7 @@
 
 Aplikasi web berbasis Spring Boot untuk pemesanan tiket pesawat dengan fitur manajemen admin dan user dashboard yang modern dan responsif.
 
-## 📋 Daftar Isi
+##  Daftar Isi
 
 - [Persyaratan Sistem](#-persyaratan-sistem)
 - [Fitur Utama](#-fitur-utama)
@@ -16,7 +16,7 @@ Aplikasi web berbasis Spring Boot untuk pemesanan tiket pesawat dengan fitur man
 
 ---
 
-## 🚀 Fitur Utama
+##  Fitur Utama
 
 ### User Features
 
@@ -174,7 +174,7 @@ pbo/
 
 ---
 
-## 📥 Langkah-langkah Instalasi
+##  Langkah-langkah Instalasi
 
 ### **Step 1: Clone/Download Project**
 
@@ -233,7 +233,7 @@ spring:
 
 ---
 
-## 🚀 Menjalankan Aplikasi
+##  Menjalankan Aplikasi
 
 ### **Cara 1: Menggunakan Maven**
 
@@ -257,7 +257,7 @@ http://localhost:8080
 
 ---
 
-## 🔑 Login Akun Default
+##  Login Akun Default
 
 ### Admin Account
 
@@ -286,13 +286,13 @@ Password akan direset ke: `admin123`
 
 ---
 
-## 📚 Dokumentasi File
+## Dokumentasi File
 
 Berikut adalah penjelasan detail mengenai fungsi setiap file dalam proyek FlyBook:
 
 ---
 
-### **📂 Controller Layer** (`src/main/java/com/flybook/pbo/controller/`)
+### ** Controller Layer** (`src/main/java/com/flybook/pbo/controller/`)
 
 Controller bertanggung jawab menangani HTTP request dan mengembalikan response (view).
 
@@ -373,7 +373,7 @@ Controller bertanggung jawab menangani HTTP request dan mengembalikan response (
 
 ---
 
-### **📦 Model Layer** (`src/main/java/com/flybook/pbo/model/`)
+### ** Model Layer** (`src/main/java/com/flybook/pbo/model/`)
 
 Model merepresentasikan struktur data (entity) yang disimpan di database.
 
