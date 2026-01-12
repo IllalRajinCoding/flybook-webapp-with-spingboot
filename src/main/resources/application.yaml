@@ -7,8 +7,8 @@ spring:
       suffix: .jsp
   datasource:
     url: jdbc:postgresql://localhost:5432/flybook
-    username: postgres # <-- Sesuaikan dengan username PostgreSQL Anda
-    password: Root # <-- Sesuaikan dengan password PostgreSQL Anda
+    username: postgres
+    password: Root
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
