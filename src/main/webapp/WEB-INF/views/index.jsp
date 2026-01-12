@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <script>
   const FLIGHT_DATABASE = [
@@ -24,545 +24,317 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </script>
 
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
-  <head>
+<html lang="id" data-theme="light" class="scroll-smooth">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FlyBook - Premium Flight Booking</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <title>FlyBook | Global Aviation Portal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ["Inter", "sans-serif"] },
+            fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] },
+            colors: { brand: "#1e40af", dark: "#0f172a", accent: "#2563eb" },
           },
         },
       };
     </script>
-  </head>
-  <body class="bg-base-100 font-sans">
-    <!-- Navbar -->
-    <div class="navbar bg-base-100 shadow-sm fixed top-0 z-50 px-4 lg:px-8">
-      <div class="navbar-start">
-        <a href="/" class="flex items-center gap-2">
-          <div
-            class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center"
-          >
-            <i class="fas fa-plane text-white"></i>
-          </div>
-          <span class="text-xl font-black tracking-tight">FlyBook</span>
-        </a>
-      </div>
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1 gap-2">
-          <li><a href="#" class="font-medium">Home</a></li>
-          <li><a href="#search" class="font-medium">Search</a></li>
-          <li><a href="#features" class="font-medium">Features</a></li>
-          <li><a href="#about" class="font-medium">About</a></li>
-        </ul>
-      </div>
-      <div class="navbar-end gap-2">
-        <c:choose>
-          <c:when test="${not empty sessionScope.userName}">
-            <div class="dropdown dropdown-end">
-              <div
-                tabindex="0"
-                role="button"
-                class="btn btn-ghost btn-circle avatar placeholder"
-              >
-                <div class="bg-neutral text-neutral-content w-10 rounded-full">
-                  <span class="text-sm"
-                    >${sessionScope.userName.substring(0,1).toUpperCase()}</span
-                  >
+    <style>
+        body { background-color: #ffffff; color: #1e293b; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #f1f5f9; }
+        .hero-gradient { background: radial-gradient(circle at 70% 30%, #f0f7ff 0%, #ffffff 100%); }
+        .pro-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; }
+        .pro-input { 
+            border: 1.5px solid #cbd5e1 !important; 
+            border-radius: 0.5rem !important; 
+            font-weight: 600; 
+            color: #0f172a !important;
+            background-color: #ffffff !important;
+        }
+        .pro-input:focus { border-color: #1e40af !important; box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1); outline: none; }
+        .flight-row { border: 1px solid #f1f5f9; transition: all 0.3s ease; border-radius: 0.5rem; background: white; }
+        .flight-row:hover { border-color: #1e40af; background-color: #f8fafc; transform: translateY(-2px); }
+        .section-tag { color: #1e40af; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; display: block; margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="navbar fixed top-0 z-[100] glass-nav px-4 md:px-16 h-16">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <label tabindex="0" class="btn btn-ghost lg:hidden text-dark">
+                    <i class="fas fa-bars-staggered"></i>
+                </label>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-2xl bg-white rounded-xl border border-slate-100 w-64 font-bold space-y-2">
+                    <li><a href="/">Beranda</a></li>
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="#services">Layanan</a></li>
+                    <li><a href="#search">Cari Tiket</a></li>
+                </ul>
+            </div>
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-brand rounded flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-paper-plane text-xs"></i>
                 </div>
-              </div>
-              <ul
-                tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg border"
-              >
-                <li class="menu-title px-4 py-2">
-                  <span
-                    class="text-xs font-semibold uppercase tracking-wider text-base-content/60"
-                    >Signed in as</span
-                  >
-                  <span class="font-bold text-base-content"
-                    >${sessionScope.userName}</span
-                  >
-                </li>
-                <div class="divider my-0"></div>
-                <li>
-                  <a
-                    href="/dashboard/${sessionScope.userRole == 'admin' ? 'admin' : 'user'}"
-                    ><i class="fas fa-gauge-high mr-2"></i>Dashboard</a
-                  >
-                </li>
-                <li>
-                  <a href="/profile"><i class="fas fa-user mr-2"></i>Profile</a>
-                </li>
-                <div class="divider my-0"></div>
-                <li>
-                  <a href="/logout" class="text-error"
-                    ><i class="fas fa-sign-out-alt mr-2"></i>Logout</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </c:when>
-          <c:otherwise>
-            <a href="/login" class="btn btn-ghost btn-sm">Sign In</a>
-            <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
-          </c:otherwise>
-        </c:choose>
-      </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section
-      class="min-h-screen pt-20 bg-gradient-to-br from-base-100 via-base-200 to-base-100 relative overflow-hidden"
-    >
-      <div class="absolute inset-0 opacity-5">
-        <div
-          class="absolute top-20 left-10 text-[20rem] font-black text-base-content select-none"
-        >
-          FLY
+                <span class="text-xl font-black tracking-tighter text-dark uppercase hidden sm:block">FlyBook</span>
+            </a>
         </div>
-      </div>
 
-      <div class="container mx-auto px-4 lg:px-8 pt-20 lg:pt-32 relative z-10">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="space-y-8">
-            <div class="badge badge-primary badge-outline gap-2 p-4">
-              <i class="fas fa-shield-halved"></i>
-              <span class="font-semibold">Trusted by 1M+ Travelers</span>
-            </div>
-            <h1 class="text-5xl lg:text-7xl font-black leading-tight">
-              Book Your Next
-              <span class="text-primary">Adventure</span>
-            </h1>
-            <p class="text-lg text-base-content/70 max-w-lg">
-              Experience seamless flight booking with competitive prices, 24/7
-              support, and instant confirmation.
-            </p>
-            <div class="flex flex-wrap gap-4">
-              <a href="#search" class="btn btn-primary btn-lg gap-2">
-                <i class="fas fa-search"></i>
-                Search Flights
-              </a>
-              <a href="#features" class="btn btn-outline btn-lg gap-2">
-                <i class="fas fa-play-circle"></i>
-                Learn More
-              </a>
-            </div>
-
-            <div class="flex gap-8 pt-8">
-              <div>
-                <div class="text-3xl font-black text-primary">500+</div>
-                <div class="text-sm text-base-content/60">Destinations</div>
-              </div>
-              <div>
-                <div class="text-3xl font-black text-primary">50+</div>
-                <div class="text-sm text-base-content/60">Airlines</div>
-              </div>
-              <div>
-                <div class="text-3xl font-black text-primary">1M+</div>
-                <div class="text-sm text-base-content/60">Happy Customers</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="hidden lg:block">
-            <div class="relative">
-              <div
-                class="w-full aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl absolute -top-10 -right-10"
-              ></div>
-              <img
-                src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80"
-                alt="Airplane"
-                class="relative z-10 rounded-3xl shadow-2xl w-full object-cover aspect-[4/3]"
-              />
-            </div>
-          </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="flex gap-10 font-black text-[10px] uppercase tracking-[0.2em] text-slate-400">
+                <li><a href="/" class="hover:text-brand transition-colors text-dark">Home</a></li>
+                <li><a href="#about" class="hover:text-brand transition-colors">About</a></li>
+                <li><a href="#services" class="hover:text-brand transition-colors">Services</a></li>
+                <li><a href="#search" class="hover:text-brand transition-colors">Reservasi</a></li>
+            </ul>
         </div>
-      </div>
+
+        <div class="navbar-end gap-4">
+            <c:choose>
+                <c:when test="${not empty sessionScope.userName}">
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost flex items-center gap-3 px-2 border border-slate-100 rounded h-10 hover:bg-slate-50">
+                            <div class="w-7 h-7 bg-dark text-white rounded flex items-center justify-center font-black text-[10px]">
+                                ${sessionScope.userName.substring(0,1).toUpperCase()}
+                            </div>
+                            <span class="text-[10px] font-black text-dark uppercase hidden md:block tracking-widest">${sessionScope.userName}</span>
+                        </label>
+                        <ul tabindex="0" class="menu dropdown-content mt-4 z-[1] p-2 shadow-2xl bg-white rounded-lg border border-slate-100 w-52 font-bold">
+                            <li><a href="/profile"><i class="fas fa-user-circle text-brand"></i> Profile</a></li>
+                            <li><a href="/dashboard/user"><i class="fas fa-grid-2 text-brand"></i> Dashboard</a></li>
+                            <div class="divider my-0 opacity-50"></div>
+                            <li><a href="/logout" class="text-red-600"><i class="fas fa-power-off"></i> Keluar</a></li>
+                        </ul>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <a href="/login" class="text-[10px] font-black text-slate-500 hover:text-brand uppercase tracking-widest px-4">Login</a>
+                    <a href="/register" class="btn bg-brand hover:bg-dark border-none text-white px-8 h-10 min-h-0 rounded font-black text-[9px] uppercase tracking-widest">Register</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </nav>
+
+    <section class="relative min-h-[90vh] flex items-center pt-24 hero-gradient px-6 border-b border-slate-50">
+        <div class="container mx-auto">
+            <div class="max-w-4xl space-y-10">
+                <span class="section-tag">Aviation Integrated System — 2026</span>
+                <h1 class="text-6xl md:text-9xl font-black tracking-tighter text-dark leading-[0.85] uppercase">
+                    Redefine <br><span class="text-brand italic underline decoration-brand/10 underline-offset-[16px]">Distance.</span>
+                </h1>
+                <p class="text-slate-500 text-lg md:text-xl font-medium max-w-xl leading-relaxed border-l-4 border-brand/20 pl-8">
+                    Solusi navigasi udara kelas dunia yang mengintegrasikan kecerdasan data dengan pengalaman perjalanan tanpa hambatan.
+                </p>
+                <div class="pt-6 flex flex-wrap gap-8 items-center">
+                    <a href="#search" class="btn bg-dark hover:bg-brand text-white px-12 h-14 rounded-lg border-none font-black uppercase tracking-widest text-[11px] shadow-2xl shadow-blue-100 transition-all">Start Exploration</a>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- Search Section -->
-    <section id="search" class="py-20 bg-base-200">
-      <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4">
-            Find Your Perfect Flight
-          </h2>
-          <p class="text-base-content/60 max-w-2xl mx-auto">
-            Search from thousands of routes and get the best deals
-          </p>
-        </div>
-
-        <div class="card bg-base-100 shadow-xl max-w-5xl mx-auto">
-          <div class="card-body">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-semibold"
-                    ><i class="fas fa-plane-departure mr-2 text-primary"></i
-                    >From</span
-                  >
-                </label>
-                <select id="origin" class="select select-bordered w-full">
-                  <option value="">Select Origin</option>
-                  <option value="Jakarta">Jakarta (CGK)</option>
-                  <option value="Surabaya">Surabaya (SUB)</option>
-                  <option value="Bali">Bali (DPS)</option>
-                  <option value="Medan">Medan (KNO)</option>
-                  <option value="Makassar">Makassar (UPG)</option>
-                </select>
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-semibold"
-                    ><i class="fas fa-plane-arrival mr-2 text-primary"></i
-                    >To</span
-                  >
-                </label>
-                <select id="dest" class="select select-bordered w-full">
-                  <option value="">Select Destination</option>
-                  <option value="Jakarta">Jakarta (CGK)</option>
-                  <option value="Surabaya">Surabaya (SUB)</option>
-                  <option value="Bali">Bali (DPS)</option>
-                  <option value="Medan">Medan (KNO)</option>
-                  <option value="Makassar">Makassar (UPG)</option>
-                </select>
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-semibold"
-                    ><i class="fas fa-calendar mr-2 text-primary"></i>Date</span
-                  >
-                </label>
-                <input
-                  type="date"
-                  id="date"
-                  class="input input-bordered w-full"
-                />
-              </div>
-              <div class="form-control justify-end">
-                <button
-                  onclick="searchFlights()"
-                  class="btn btn-primary h-12 gap-2"
-                >
-                  <span id="btnText">Search</span>
-                  <span
-                    id="loader"
-                    class="loading loading-spinner loading-sm hidden"
-                  ></span>
-                  <i class="fas fa-arrow-right" id="searchIcon"></i>
+    <section id="search" class="container mx-auto px-6 relative z-50">
+        <div class="pro-card p-8 md:p-12 shadow-2xl border-slate-100 -mt-20 bg-white">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-end">
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-black text-slate-400 text-[10px] uppercase tracking-widest">Origin</span></label>
+                    <select id="origin" class="select select-bordered pro-input w-full"></select>
+                </div>
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-black text-slate-400 text-[10px] uppercase tracking-widest">Destination</span></label>
+                    <select id="dest" class="select select-bordered pro-input w-full"></select>
+                </div>
+                <div class="form-control">
+                    <label class="label pt-0"><span class="label-text font-black text-slate-400 text-[10px] uppercase tracking-widest">Departure Date</span></label>
+                    <input type="date" id="date" class="input input-bordered pro-input w-full" />
+                </div>
+                <button onclick="searchFlights()" class="btn bg-brand hover:bg-dark text-white h-12 rounded-lg font-black uppercase tracking-widest text-[10px] border-none px-8 shadow-xl shadow-blue-100 transition-all">
+                    <span id="btnText">Verify Flights</span>
+                    <span id="loader" class="loading loading-spinner loading-xs hidden"></span>
                 </button>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
 
-    <!-- Results Section -->
-    <section id="results" class="py-20 bg-base-100 hidden">
-      <div class="container mx-auto px-4 lg:px-8">
-        <div class="flex justify-between items-center mb-8">
-          <div>
-            <h2 class="text-2xl font-bold">Search Results</h2>
-            <p id="count" class="text-base-content/60"></p>
-          </div>
+    <main id="results" class="container mx-auto px-6 py-32 hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6 border-b border-slate-100 pb-10">
+            <div>
+                <h2 class="text-4xl font-black text-dark tracking-tighter uppercase italic">Inventory Units</h2>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-3">FOUND <span id="count" class="text-brand">0</span> ACTIVE UNITS DISCOVERED</p>
+            </div>
         </div>
-        <div id="flightGrid" class="space-y-4"></div>
-      </div>
-    </section>
+        <div id="flightGrid" class="space-y-4 max-w-6xl mx-auto"></div>
+    </main>
 
-    <!-- Features Section -->
-    <section id="features" class="py-20 bg-base-100">
-      <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4">
-            Why Choose FlyBook?
-          </h2>
-          <p class="text-base-content/60 max-w-2xl mx-auto">
-            We provide the best experience for booking your flights
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-          <div
-            class="card bg-base-200 hover:shadow-xl transition-all duration-300"
-          >
-            <div class="card-body items-center text-center">
-              <div
-                class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4"
-              >
-                <i class="fas fa-tag text-2xl text-primary"></i>
-              </div>
-              <h3 class="card-title">Best Prices</h3>
-              <p class="text-base-content/60">
-                Get competitive prices with our price match guarantee
-              </p>
-            </div>
-          </div>
-          <div
-            class="card bg-base-200 hover:shadow-xl transition-all duration-300"
-          >
-            <div class="card-body items-center text-center">
-              <div
-                class="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-4"
-              >
-                <i class="fas fa-bolt text-2xl text-secondary"></i>
-              </div>
-              <h3 class="card-title">Instant Booking</h3>
-              <p class="text-base-content/60">
-                Book your flight in seconds with instant confirmation
-              </p>
-            </div>
-          </div>
-          <div
-            class="card bg-base-200 hover:shadow-xl transition-all duration-300"
-          >
-            <div class="card-body items-center text-center">
-              <div
-                class="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mb-4"
-              >
-                <i class="fas fa-headset text-2xl text-accent"></i>
-              </div>
-              <h3 class="card-title">24/7 Support</h3>
-              <p class="text-base-content/60">
-                Our team is always ready to help you anytime
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-base-200">
-      <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div class="relative">
-            <img
-              src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80"
-              alt="About"
-              class="rounded-3xl shadow-2xl w-full"
-            />
-            <div
-              class="absolute -bottom-6 -right-6 bg-primary text-primary-content p-6 rounded-2xl shadow-xl hidden md:block"
-            >
-              <div class="text-4xl font-black">25+</div>
-              <div class="text-sm opacity-80">Years of Excellence</div>
-            </div>
-          </div>
-          <div class="space-y-6">
-            <div class="badge badge-primary badge-outline">About Us</div>
-            <h2 class="text-3xl lg:text-4xl font-bold">
-              Your Trusted Partner in Air Travel
-            </h2>
-            <p class="text-base-content/70 leading-relaxed">
-              FlyBook has been connecting travelers to their destinations for
-              over 25 years. We partner with major airlines worldwide to bring
-              you the best flight options at competitive prices.
-            </p>
-            <div class="grid grid-cols-2 gap-6 pt-4">
-              <div class="flex gap-4">
-                <div
-                  class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0"
-                >
-                  <i class="fas fa-award text-primary"></i>
+    <section id="about" class="container mx-auto px-6 py-32">
+        <div class="grid lg:grid-cols-2 gap-24 items-center">
+            <div class="space-y-10">
+                <span class="section-tag">About FlyBook</span>
+                <h2 class="text-5xl font-black text-dark leading-tight tracking-tighter uppercase">Infrastruktur <br>Masa Depan.</h2>
+                <p class="text-slate-500 leading-relaxed font-medium text-lg italic border-l-4 border-slate-100 pl-8">
+                    "Kami bukan sekadar platform booking. Kami adalah integrator sistem aviasi yang memastikan setiap koordinat perjalanan Anda tercatat dengan presisi tinggi."
+                </p>
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <p class="text-4xl font-black text-brand leading-none mb-3">99%</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Data Accuracy</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <p class="text-4xl font-black text-brand leading-none mb-3">24h</p>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Real-time Sync</p>
+                    </div>
                 </div>
-                <div>
-                  <h4 class="font-bold">Award Winning</h4>
-                  <p class="text-sm text-base-content/60">
-                    Best travel platform 2024
-                  </p>
-                </div>
-              </div>
-              <div class="flex gap-4">
-                <div
-                  class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0"
-                >
-                  <i class="fas fa-globe text-secondary"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold">Global Reach</h4>
-                  <p class="text-sm text-base-content/60">500+ destinations</p>
-                </div>
-              </div>
             </div>
-          </div>
+            <div class="relative hidden lg:block">
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800" 
+                     class="rounded shadow-2xl relative z-10 grayscale hover:grayscale-0 transition duration-1000" alt="About">
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-primary text-primary-content">
-      <div class="container mx-auto px-4 lg:px-8 text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4">
-          Ready to Start Your Journey?
-        </h2>
-        <p class="text-primary-content/80 mb-8 max-w-2xl mx-auto">
-          Join millions of travelers who trust FlyBook for their flight bookings
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-          <a href="/register" class="btn btn-secondary btn-lg gap-2">
-            <i class="fas fa-user-plus"></i>
-            Create Account
-          </a>
-          <a
-            href="#search"
-            class="btn btn-outline btn-lg text-primary-content border-primary-content hover:bg-primary-content hover:text-primary gap-2"
-          >
-            <i class="fas fa-search"></i>
-            Search Flights
-          </a>
+    <section id="services" class="bg-slate-50 py-32 border-y border-slate-100">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="section-tag">Services</span>
+                <h2 class="text-5xl font-black text-dark tracking-tighter uppercase mb-6">World Class Ecosystem</h2>
+                <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">Eksklusivitas dalam setiap proses reservasi.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="pro-card p-12 bg-white hover:border-brand transition-all">
+                    <div class="w-12 h-12 bg-blue-50 text-brand rounded flex items-center justify-center text-xl mb-8"><i class="fas fa-shield-halved"></i></div>
+                    <h4 class="text-lg font-black text-dark mb-4 uppercase tracking-tighter">Cyber Security</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Proteksi data reservasi dengan enkripsi standar militer untuk keamanan mutlak.</p>
+                </div>
+                <div class="pro-card p-12 bg-white hover:border-brand transition-all">
+                    <div class="w-12 h-12 bg-blue-50 text-brand rounded flex items-center justify-center text-xl mb-8"><i class="fas fa-bolt"></i></div>
+                    <h4 class="text-lg font-black text-dark mb-4 uppercase tracking-tighter">Instant Booking</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Konfirmasi instan tanpa menunggu proses manual. Tiket Anda terbit dalam hitungan detik.</p>
+                </div>
+                <div class="pro-card p-12 bg-white hover:border-brand transition-all">
+                    <div class="w-12 h-12 bg-blue-50 text-brand rounded flex items-center justify-center text-xl mb-8"><i class="fas fa-globe"></i></div>
+                    <h4 class="text-lg font-black text-dark mb-4 uppercase tracking-tighter">Global Access</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Terhubung dengan ribuan rute domestik dan internasional melalui satu portal cerdas.</p>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer footer-center bg-base-300 text-base-content p-10">
-      <aside>
-        <div class="flex items-center gap-2 mb-4">
-          <div
-            class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center"
-          >
-            <i class="fas fa-plane text-white"></i>
-          </div>
-          <span class="text-xl font-black">FlyBook</span>
+    <footer class="bg-dark py-20 text-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12 mb-20">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center gap-2 justify-center md:justify-start mb-6">
+                        <div class="w-8 h-8 bg-brand rounded flex items-center justify-center"><i class="fas fa-paper-plane text-xs"></i></div>
+                        <span class="text-2xl font-black italic tracking-tighter uppercase">FlyBook</span>
+                    </div>
+                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Integrated Aviation Network</p>
+                </div>
+                <div class="flex gap-16 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <a href="#" class="hover:text-white transition-colors">Support</a>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+            <p class="text-slate-700 text-center text-[9px] font-black uppercase tracking-[0.8em]">FlyBook Global — 2026. Official Enterprise Portal.</p>
         </div>
-        <p class="font-semibold">Premium Flight Booking Service</p>
-        <p class="text-base-content/60">Connecting travelers since 2000</p>
-      </aside>
-      <nav>
-        <div class="grid grid-flow-col gap-4">
-          <a class="btn btn-ghost btn-circle"
-            ><i class="fab fa-twitter text-lg"></i
-          ></a>
-          <a class="btn btn-ghost btn-circle"
-            ><i class="fab fa-facebook text-lg"></i
-          ></a>
-          <a class="btn btn-ghost btn-circle"
-            ><i class="fab fa-instagram text-lg"></i
-          ></a>
-          <a class="btn btn-ghost btn-circle"
-            ><i class="fab fa-linkedin text-lg"></i
-          ></a>
-        </div>
-      </nav>
-      <aside>
-        <p>Copyright 2026 FlyBook. All rights reserved.</p>
-      </aside>
     </footer>
 
     <script>
-      function searchFlights() {
-        const btnText = document.getElementById("btnText");
-        const loader = document.getElementById("loader");
-        const searchIcon = document.getElementById("searchIcon");
-        const results = document.getElementById("results");
-        const flightGrid = document.getElementById("flightGrid");
-        const countText = document.getElementById("count");
+        // 1. DYNAMIC DROPDOWN
+        document.addEventListener("DOMContentLoaded", () => {
+            const originSelect = document.getElementById("origin");
+            const destSelect = document.getElementById("dest");
 
-        const origin = document
-          .getElementById("origin")
-          .value.toLowerCase()
-          .trim();
-        const dest = document.getElementById("dest").value.toLowerCase().trim();
+            const uniqueOrigins = [...new Set(FLIGHT_DATABASE.map(item => item.asal))];
+            const uniqueDests = [...new Set(FLIGHT_DATABASE.map(item => item.tujuan))];
 
-        btnText.classList.add("hidden");
-        searchIcon.classList.add("hidden");
-        loader.classList.remove("hidden");
+            const addOption = (select, text, val) => {
+                const opt = document.createElement("option");
+                opt.value = val;
+                opt.textContent = text.toUpperCase();
+                select.appendChild(opt);
+            };
 
-        setTimeout(() => {
-          const filtered = FLIGHT_DATABASE.filter(
-            (f) =>
-              (!origin || f.asal.toLowerCase().includes(origin)) &&
-              (!dest || f.tujuan.toLowerCase().includes(dest))
-          );
+            addOption(originSelect, "Search Origin", "");
+            uniqueOrigins.sort().forEach(city => addOption(originSelect, city, city));
+            
+            addOption(destSelect, "Search Destination", "");
+            uniqueDests.sort().forEach(city => addOption(destSelect, city, city));
+        });
 
-          flightGrid.innerHTML = "";
-          if (filtered.length > 0) {
-            filtered.forEach((f) => {
-              flightGrid.innerHTML += `
-                <div class="card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 border border-base-200">
-                  <div class="card-body">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                      <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <i class="fas fa-plane text-xl text-primary"></i>
-                        </div>
-                        <div>
-                          <h3 class="font-bold text-lg">\${f.maskapai}</h3>
-                          <p class="text-sm text-base-content/60">\${f.kode}</p>
-                        </div>
-                      </div>
-                      
-                      <div class="flex-1 flex items-center justify-between gap-4">
-                        <div class="text-center">
-                          <div class="text-2xl font-bold">\${f.jamBerangkat}</div>
-                          <div class="text-sm text-base-content/60">\${f.asal}</div>
-                        </div>
-                        <div class="flex-1 flex items-center justify-center px-4">
-                          <div class="w-full h-px bg-base-300 relative">
-                            <i class="fas fa-plane absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-base-content/30"></i>
-                          </div>
-                        </div>
-                        <div class="text-center">
-                          <div class="text-2xl font-bold">\${f.jamTiba}</div>
-                          <div class="text-sm text-base-content/60">\${f.tujuan}</div>
-                        </div>
-                      </div>
-                      
-                      <div class="flex items-center gap-6">
-                        <div class="text-right">
-                          <div class="text-sm text-base-content/60">Starting from</div>
-                          <div class="text-2xl font-bold text-primary">IDR \${f.harga.toLocaleString()}</div>
-                          <div class="text-xs text-base-content/60">\${f.kursiSisa} seats left</div>
-                        </div>
-                        <a href="/dashboard/user/tiket/\${f.id}/book" class="btn btn-primary">Book Now</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              `;
-            });
-            countText.innerText = filtered.length + " flights found";
-          } else {
-            flightGrid.innerHTML = `
-                <div class="card bg-base-200 border-dashed border-2 border-base-300">
-                    <div class="card-body items-center text-center py-16">
-                        <i class="fas fa-plane-slash text-4xl text-base-content/30 mb-4"></i>
-                        <h3 class="font-bold text-lg">No Flights Found</h3>
-                        <p class="text-base-content/60">Try adjusting your search criteria</p>
-                    </div>
-                </div>
-            `;
-            countText.innerText = "No results";
-          }
+        // 2. SEARCH ENGINE
+        function searchFlights() {
+            const btnText = document.getElementById("btnText");
+            const loader = document.getElementById("loader");
+            const flightGrid = document.getElementById("flightGrid");
+            const results = document.getElementById("results");
 
-          results.classList.remove("hidden");
-          btnText.classList.remove("hidden");
-          searchIcon.classList.remove("hidden");
-          loader.classList.add("hidden");
-          results.scrollIntoView({ behavior: "smooth" });
-        }, 1000);
-      }
+            btnText.classList.add("hidden");
+            loader.classList.remove("hidden");
+
+            setTimeout(() => {
+                const origin = document.getElementById("origin").value;
+                const dest = document.getElementById("dest").value;
+                const date = document.getElementById("date").value;
+
+                const filtered = FLIGHT_DATABASE.filter(f => 
+                    (!origin || f.asal === origin) && 
+                    (!dest || f.tujuan === dest) &&
+                    (!date || f.tanggal === date)
+                );
+
+                flightGrid.innerHTML = "";
+                if (filtered.length > 0) {
+                    filtered.forEach(f => {
+                        flightGrid.innerHTML += `
+                            <div class="flight-row p-8 flex flex-col md:flex-row items-center justify-between gap-10">
+                                <div class="flex items-center gap-6 md:w-1/4">
+                                    <div class="w-12 h-12 bg-dark text-white rounded-md flex items-center justify-center font-black italic text-xs border border-slate-800">FB</div>
+                                    <div>
+                                        <p class="font-black text-dark text-lg leading-none uppercase mb-1">\${f.maskapai}</p>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">\${f.kode}</p>
+                                            <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                            <p class="text-[9px] font-black text-brand uppercase tracking-widest">\${f.tanggal}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-1 flex justify-center items-center gap-12 border-x border-slate-50 px-10">
+                                    <div class="text-center">
+                                        <p class="text-3xl font-black text-dark tracking-tighter leading-none">\${f.jamBerangkat}</p>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase mt-2 tracking-widest">\${f.asal}</p>
+                                    </div>
+                                    <i class="fas fa-plane text-slate-200 text-xs"></i>
+                                    <div class="text-center">
+                                        <p class="text-3xl font-black text-dark tracking-tighter leading-none">\${f.jamTiba}</p>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase mt-2 tracking-widest">\${f.tujuan}</p>
+                                    </div>
+                                </div>
+                                <div class="md:w-1/4 text-right">
+                                    <p class="text-2xl font-black text-brand tracking-tighter mb-4 italic">IDR \${f.harga.toLocaleString()}</p>
+                                    <a href="/dashboard/user/tiket/\${f.id}/book" class="btn bg-dark text-white border-none rounded-md px-12 font-black text-[9px] uppercase tracking-[0.2em] h-10 hover:bg-brand transition-all">Select</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById("count").innerText = filtered.length;
+                } else {
+                    flightGrid.innerHTML = `<div class="p-24 text-center border-2 border-dashed border-slate-200 rounded-xl font-black text-slate-300 uppercase text-[10px] tracking-widest bg-slate-50/50">Database Log: 0 Matches for current criteria.</div>`;
+                    document.getElementById("count").innerText = "0";
+                }
+
+                results.classList.remove("hidden");
+                btnText.classList.remove("hidden");
+                loader.classList.add("hidden");
+                results.scrollIntoView({ behavior: "smooth" });
+            }, 600);
+        }
     </script>
-  </body>
+</body>
 </html>
