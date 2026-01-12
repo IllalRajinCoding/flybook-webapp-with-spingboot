@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/flybook
     username: postgres # <-- Sesuaikan dengan username PostgreSQL Anda
-    password: Intan # <-- Sesuaikan dengan password PostgreSQL Anda
+    password: Root # <-- Sesuaikan dengan password PostgreSQL Anda
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
