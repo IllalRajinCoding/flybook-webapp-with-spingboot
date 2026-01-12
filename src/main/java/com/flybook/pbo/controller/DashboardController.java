@@ -142,4 +142,54 @@ public class DashboardController {
         }
         return "redirect:/dashboard/user";
     }
+
+    // ==================== USER BOOKING MANAGEMENT ====================
+    @GetMapping("/user/booking/{id}/edit")
+    public String showEditBookingForm(@PathVariable int id, Model model, HttpSession session) {
+        String userName = (String) session.getAttribute("userName");
+        if (userName == null) {
+            return "redirect:/login";
+        }
+
+        Booking booking = BookingService.getBookingById(id);
+        if (booking != null && booking.getUserName().equals(userName) && "pending".equals(booking.getStatus())) {
+            model.addAttribute("booking", booking);
+            Tiket tiket = TiketService.getTiketById(booking.getTiketId());
+            model.addAttribute("tiket", tiket);
+            int availableSeats = TiketService.getAvailableSeats(booking.getTiketId()) + booking.getJumlahKursi();
+            model.addAttribute("availableSeats", availableSeats);
+            return "booking-edit";
+        }
+        return "redirect:/dashboard/user";
+    }
+
+    @PostMapping("/user/booking/{id}/update")
+    public String updateUserBooking(@PathVariable int id, @RequestParam int jumlahKursi, HttpSession session) {
+        String userName = (String) session.getAttribute("userName");
+        if (userName == null) {
+            return "redirect:/login";
+        }
+
+        if (BookingService.updateUserBooking(id, userName, jumlahKursi)) {
+            session.setAttribute("successMsg", "Pesanan berhasil diupdate!");
+        } else {
+            session.setAttribute("errorMsg", "Gagal mengupdate pesanan.");
+        }
+        return "redirect:/dashboard/user";
+    }
+
+    @PostMapping("/user/booking/{id}/delete")
+    public String deleteUserBooking(@PathVariable int id, HttpSession session) {
+        String userName = (String) session.getAttribute("userName");
+        if (userName == null) {
+            return "redirect:/login";
+        }
+
+        if (BookingService.deleteUserBooking(id, userName)) {
+            session.setAttribute("successMsg", "Pesanan berhasil dibatalkan!");
+        } else {
+            session.setAttribute("errorMsg", "Gagal membatalkan pesanan.");
+        }
+        return "redirect:/dashboard/user";
+    }
 }

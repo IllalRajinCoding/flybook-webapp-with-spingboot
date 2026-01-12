@@ -113,4 +113,52 @@ public class BookingService {
         List<Booking> all = BookingRepository.getAll();
         return (int) all.stream().filter(b -> status.equals(b.getStatus())).count();
     }
+
+    /**
+     * Update user booking (only if belongs to user and is pending)
+     */
+    public static boolean updateUserBooking(int bookingId, String userName, int newJumlahKursi) {
+        Booking booking = BookingRepository.getById(bookingId);
+        if (booking == null || !booking.getUserName().equals(userName) || !"pending".equals(booking.getStatus())) {
+            return false;
+        }
+
+        // Get tiket info
+        Tiket tiket = TiketRepository.getById(booking.getTiketId());
+        if (tiket == null) {
+            return false;
+        }
+
+        // Check seat availability (current available + seats from this booking)
+        int availableSeats = tiket.getKursiTersedia() - tiket.getKursiTerjual() + booking.getJumlahKursi();
+        if (availableSeats < newJumlahKursi || newJumlahKursi < 1) {
+            return false;
+        }
+
+        // Calculate new total price
+        double newTotalHarga = tiket.getHarga() * newJumlahKursi;
+
+        return BookingRepository.updateBooking(bookingId, newJumlahKursi, newTotalHarga);
+    }
+
+    /**
+     * Delete user booking (only if belongs to user)
+     */
+    public static boolean deleteUserBooking(int bookingId, String userName) {
+        Booking booking = BookingRepository.getById(bookingId);
+        if (booking == null || !booking.getUserName().equals(userName)) {
+            return false;
+        }
+
+        // If booking was confirmed (success), restore the seats
+        if ("success".equals(booking.getStatus())) {
+            Tiket tiket = TiketRepository.getById(booking.getTiketId());
+            if (tiket != null) {
+                tiket.setKursiTerjual(tiket.getKursiTerjual() - booking.getJumlahKursi());
+                TiketRepository.update(tiket);
+            }
+        }
+
+        return BookingRepository.delete(bookingId);
+    }
 }

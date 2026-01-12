@@ -75,6 +75,124 @@ public class UserRepository {
     }
 
     /**
+     * Find user by ID
+     */
+    public static User findById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToUser(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding user by id: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Update user profile (name and email)
+     */
+    public static boolean updateProfile(int userId, String name, String email) {
+        String sql = "UPDATE users SET name = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating user profile: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update user password
+     */
+    public static boolean updatePassword(int userId, String newPassword) {
+        String sql = "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newPassword);
+            pstmt.setInt(2, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating password: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete user by ID
+     */
+    public static boolean deleteById(int userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error deleting user: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Verify user password
+     */
+    public static boolean verifyPassword(int userId, String password) {
+        String sql = "SELECT id FROM users WHERE id = ? AND password = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verifying password: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Check if email exists for another user (for profile update)
+     */
+    public static boolean emailExistsForOther(String email, int excludeUserId) {
+        String sql = "SELECT id FROM users WHERE email = ? AND id != ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            pstmt.setInt(2, excludeUserId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * Map ResultSet to User object
      */
     private static User mapResultSetToUser(ResultSet rs) throws SQLException {

@@ -151,6 +151,26 @@ public class BookingRepository {
     }
 
     /**
+     * Update booking (jumlah kursi and total harga)
+     */
+    public static boolean updateBooking(int id, int jumlahKursi, double totalHarga) {
+        String sql = "UPDATE booking SET jumlah_kursi = ?, total_harga = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, jumlahKursi);
+            pstmt.setDouble(2, totalHarga);
+            pstmt.setInt(3, id);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating booking: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Map ResultSet to Booking object
      */
     private static Booking mapResultSetToBooking(ResultSet rs) throws SQLException {
