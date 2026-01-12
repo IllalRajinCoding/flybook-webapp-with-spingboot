@@ -12,7 +12,7 @@ public class DatabaseConfig {
     // Database credentials
     private static final String URL = "jdbc:postgresql://localhost:5432/flybook";
     private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "Intan";
+    private static final String PASSWORD = "Root";
 
     // JDBC driver class
     private static final String DRIVER = "org.postgresql.Driver";
