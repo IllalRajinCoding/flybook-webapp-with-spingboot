@@ -1,11 +1,15 @@
 package com.flybook.pbo.repository;
 
-import com.flybook.pbo.database.DatabaseConfig;
-import com.flybook.pbo.model.Booking;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flybook.pbo.database.DatabaseConfig;
+import com.flybook.pbo.model.Booking;
 
 public class BookingRepository {
 
@@ -13,19 +17,18 @@ public class BookingRepository {
      * Create new booking
      */
     public static boolean create(Booking booking) {
-        String sql = "INSERT INTO booking (booking_code, tiket_id, user_name, jumlah_kursi, total_harga, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        String sql = "INSERT INTO booking (booking_code, tiket_id, user_name, jumlah_kursi, total_harga, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, booking.getBookingCode());
             pstmt.setInt(2, booking.getTiketId());
             pstmt.setString(3, booking.getUserName());
             pstmt.setInt(4, booking.getJumlahKursi());
             pstmt.setDouble(5, booking.getTotalHarga());
             pstmt.setString(6, booking.getStatus());
-            
+
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -39,17 +42,15 @@ public class BookingRepository {
      */
     public static List<Booking> getAll() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, " +
-                    "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, " +
-                    "t.jam_berangkat, t.jam_tiba " +
-                    "FROM booking b " +
-                    "JOIN tiket t ON b.tiket_id = t.id " +
-                    "ORDER BY b.tanggal_booking DESC";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
+        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, "
+                + "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, "
+                + "t.jam_berangkat, t.jam_tiba "
+                + "FROM booking b "
+                + "JOIN tiket t ON b.tiket_id = t.id "
+                + "ORDER BY b.tanggal_booking DESC";
+
+        try (Connection conn = DatabaseConfig.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
                 Booking booking = mapResultSetToBooking(rs);
                 bookings.add(booking);
@@ -65,17 +66,16 @@ public class BookingRepository {
      */
     public static List<Booking> getByUserName(String userName) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, " +
-                    "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, " +
-                    "t.jam_berangkat, t.jam_tiba " +
-                    "FROM booking b " +
-                    "JOIN tiket t ON b.tiket_id = t.id " +
-                    "WHERE b.user_name = ? " +
-                    "ORDER BY b.tanggal_booking DESC";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, "
+                + "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, "
+                + "t.jam_berangkat, t.jam_tiba "
+                + "FROM booking b "
+                + "JOIN tiket t ON b.tiket_id = t.id "
+                + "WHERE b.user_name = ? "
+                + "ORDER BY b.tanggal_booking DESC";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, userName);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -93,16 +93,15 @@ public class BookingRepository {
      * Get booking by ID
      */
     public static Booking getById(int id) {
-        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, " +
-                    "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, " +
-                    "t.jam_berangkat, t.jam_tiba " +
-                    "FROM booking b " +
-                    "JOIN tiket t ON b.tiket_id = t.id " +
-                    "WHERE b.id = ?";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, "
+                + "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, "
+                + "t.jam_berangkat, t.jam_tiba "
+                + "FROM booking b "
+                + "JOIN tiket t ON b.tiket_id = t.id "
+                + "WHERE b.id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -120,13 +119,12 @@ public class BookingRepository {
      */
     public static boolean updateStatus(int id, String status) {
         String sql = "UPDATE booking SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, status);
             pstmt.setInt(2, id);
-            
+
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -140,15 +138,34 @@ public class BookingRepository {
      */
     public static boolean delete(int id) {
         String sql = "DELETE FROM booking WHERE id = ?";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, id);
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
             System.err.println("Error deleting booking: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update booking (jumlah kursi and total harga)
+     */
+    public static boolean updateBooking(int id, int jumlahKursi, double totalHarga) {
+        String sql = "UPDATE booking SET jumlah_kursi = ?, total_harga = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, jumlahKursi);
+            pstmt.setDouble(2, totalHarga);
+            pstmt.setInt(3, id);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating booking: " + e.getMessage());
             return false;
         }
     }
@@ -167,7 +184,7 @@ public class BookingRepository {
         booking.setStatus(rs.getString("status"));
         booking.setTanggalBooking(rs.getTimestamp("tanggal_booking"));
         booking.setUpdatedAt(rs.getTimestamp("updated_at"));
-        
+
         // Join fields
         booking.setNomorTiket(rs.getString("nomor_tiket"));
         booking.setMaskapai(rs.getString("maskapai"));
@@ -177,7 +194,7 @@ public class BookingRepository {
         booking.setTanggalBerangkat(rs.getString("tanggal_berangkat"));
         booking.setJamBerangkat(rs.getString("jam_berangkat"));
         booking.setJamTiba(rs.getString("jam_tiba"));
-        
+
         return booking;
     }
 }

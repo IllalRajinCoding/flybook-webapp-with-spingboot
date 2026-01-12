@@ -1,393 +1,277 @@
-# 🛫 FlyBook - Sistem Booking Tiket Pesawat
+# FlyBook - Sistem Booking Tiket Pesawat
 
-Aplikasi web berbasis Spring Boot untuk pemesanan tiket pesawat dengan fitur manajemen admin dan user.
+Aplikasi web berbasis Spring Boot untuk pemesanan tiket pesawat dengan fitur manajemen admin dan user dashboard yang modern dan responsif.
 
-## 📋 Daftar Isi
+## Fitur Utama
 
-- [Persyaratan Sistem](#-persyaratan-sistem)
-- [Langkah-langkah Instalasi](#-langkah-langkah-instalasi)
-- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
-- [Login Akun Default](#-login-akun-default)
-- [Troubleshooting](#-troubleshooting)
+### Fitur User
+
+| Fitur              | Deskripsi                                          |
+| ------------------ | -------------------------------------------------- |
+| Registrasi         | Daftar akun baru dengan nama, email, dan password  |
+| Login              | Masuk ke akun dengan email dan password            |
+| Dashboard User     | Melihat semua booking dan status pesanan           |
+| Cari Penerbangan   | Filter berdasarkan kota asal, tujuan, dan tanggal  |
+| Booking Tiket      | Pesan tiket dengan pilihan jumlah kursi            |
+| Lihat Detail Tiket | Informasi lengkap penerbangan sebelum booking      |
+| Edit Booking       | Ubah jumlah kursi pada pesanan (status pending)    |
+| Batalkan Booking   | Batalkan pesanan yang masih pending                |
+| Profil User        | Lihat dan edit informasi akun                      |
+| Ubah Password      | Ganti password akun                                |
+| Hapus Akun         | Hapus akun secara permanen                         |
+| Riwayat Perjalanan | Lihat jumlah total penerbangan yang pernah dipesan |
+
+### Fitur Admin
+
+| Fitur                 | Deskripsi                                                  |
+| --------------------- | ---------------------------------------------------------- |
+| Dashboard Admin       | Overview statistik: total tiket, booking, user, pendapatan |
+| Kelola Tiket          | Lihat daftar semua tiket penerbangan                       |
+| Tambah Tiket          | Buat jadwal penerbangan baru                               |
+| Edit Tiket            | Ubah informasi tiket (maskapai, jadwal, harga, kursi)      |
+| Hapus Tiket           | Hapus tiket dari sistem                                    |
+| Kelola Booking        | Lihat semua pesanan dari semua user                        |
+| Update Status Booking | Ubah status: pending → confirmed → completed / cancelled   |
+| Kelola User           | Lihat daftar semua user terdaftar                          |
+| Profil Admin          | Lihat dan edit informasi akun admin                        |
+
+### Fitur Umum
+
+| Fitur              | Deskripsi                                                       |
+| ------------------ | --------------------------------------------------------------- |
+| Landing Page       | Homepage dengan hero, search, galeri destinasi, about, services |
+| Galeri Destinasi   | Tampilan destinasi populer Indonesia                            |
+| Responsive Design  | Tampilan optimal di desktop dan mobile                          |
+| UI Modern          | DaisyUI + Tailwind CSS dengan tema cupcake                      |
+| Notifikasi         | Alert success/error untuk setiap aksi                           |
+| Session Management | Login session yang aman                                         |
 
 ---
 
-## 🔧 Persyaratan Sistem
+## Persyaratan Sistem
 
-Sebelum memulai, pastikan komputer Anda sudah memiliki:
+### 1. Java Development Kit (JDK) 21+
 
-### 1. **Java Development Kit (JDK) 21**
-
-- Download: [Oracle JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) atau [OpenJDK 21](https://adoptium.net/)
-- Verifikasi instalasi:
+- **Download:** [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) atau [OpenJDK Temurin](https://adoptium.net/)
+- **Verifikasi instalasi:**
   ```bash
   java -version
   ```
-- Harus muncul: `java version "21.x.x"`
+  Output yang diharapkan: `openjdk version "21.x.x"` atau lebih tinggi
 
-### 2. **Apache Maven 3.8+**
+### 2. Apache Maven 3.8+ (Opsional)
 
-- Download: [Maven](https://maven.apache.org/download.cgi)
-- Atau gunakan Maven wrapper yang sudah disediakan (`mvnw.cmd`)
-- Verifikasi instalasi:
+- **Download:** [Maven](https://maven.apache.org/download.cgi)
+- Project ini sudah include Maven Wrapper, jadi tidak wajib install Maven
+- **Verifikasi instalasi:**
   ```bash
   mvn -version
   ```
 
-### 3. **PostgreSQL 14+**
+### 3. PostgreSQL 14+
 
-- Download: [PostgreSQL](https://www.postgresql.org/download/)
-- **Catat username dan password** yang Anda buat saat instalasi
-- Default: username `postgres`, password `Root` (atau sesuai yang Anda setting)
+- **Download:** [PostgreSQL](https://www.postgresql.org/download/)
+- **Verifikasi instalasi:**
+  ```bash
+  psql --version
+  pg_isready -h localhost -p 5432
+  ```
 
-### 4. **Git** (opsional)
+### 4. Git (untuk clone repository)
 
-- Untuk clone repository
-- Download: [Git](https://git-scm.com/downloads)
+- **Download:** [Git](https://git-scm.com/downloads)
 
 ---
 
-## 📥 Langkah-langkah Instalasi
+## Instalasi & Menjalankan Aplikasi
 
-### **Step 1: Download/Clone Project**
+### Langkah 1: Clone Repository
 
 ```bash
-# Jika menggunakan Git
-git clone <repository-url>
-cd pbo
-
-# Atau extract file ZIP jika sudah didownload
+git clone https://github.com/user/flybook.git
+cd flybook
 ```
 
-### **Step 2: Setup Database PostgreSQL**
+### Langkah 2: Setup Database PostgreSQL
 
-#### A. Buat Database Baru
+#### Opsi A: Menggunakan pgAdmin
 
-1. Buka **pgAdmin** atau **Command Prompt**
-2. Login ke PostgreSQL:
-   ```bash
-   psql -U postgres
-   ```
-3. Buat database `flybook`:
-   ```sql
-   CREATE DATABASE flybook;
-   \q
-   ```
+1. Buka pgAdmin
+2. Klik kanan pada "Databases" → Create → Database
+3. Masukkan nama: `flybook`
+4. Klik Save
 
-#### B. Jalankan Script Setup (MUDAH!)
-
-**Untuk Windows:**
+#### Opsi B: Menggunakan Command Line
 
 ```bash
-# Jalankan batch file yang sudah disediakan
+# Login ke PostgreSQL
+psql -U postgres
+
+# Buat database
+CREATE DATABASE flybook;
+
+# Keluar
+\q
+```
+
+#### Opsi C: Menggunakan Script (Windows)
+
+```bash
+# Jalankan script setup database
 setup-database.bat
 ```
 
-**Untuk Manual/Linux:**
+### Langkah 3: Konfigurasi Database
 
-```bash
-# Set password PostgreSQL (sesuaikan dengan password Anda)
-export PGPASSWORD=Root
-
-# Jalankan schema
-psql -U postgres -d flybook -f src/main/resources/users_schema.sql
-psql -U postgres -d flybook -f src/main/resources/tiket_schema.sql
-psql -U postgres -d flybook -f src/main/resources/booking_schema.sql
-```
-
-✅ **Jika berhasil**, Anda akan melihat pesan:
-
-```
-Database setup completed successfully!
-```
-
-### **Step 3: Konfigurasi Database Connection**
-
-Buka file `src/main/resources/application.yaml` dan sesuaikan dengan konfigurasi PostgreSQL Anda:
+Edit file `src/main/resources/application.yaml`:
 
 ```yaml
 spring:
-  application:
-    name: pbo
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
   datasource:
     url: jdbc:postgresql://localhost:5432/flybook
-    username: postgres # <-- Sesuaikan dengan username PostgreSQL Anda
-    password: Root # <-- Sesuaikan dengan password PostgreSQL Anda
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    username: postgres # Sesuaikan dengan username PostgreSQL Anda
+    password: your_password # Sesuaikan dengan password PostgreSQL Anda
 ```
 
-> ⚠️ **PENTING**: Ganti `username` dan `password` sesuai dengan PostgreSQL Anda!
+### Langkah 4: Build & Jalankan Aplikasi
 
-### **Step 4: Build Aplikasi**
+#### Windows:
 
 ```bash
-# Menggunakan Maven (jika sudah terinstall)
-mvn clean install
+# Build project
+.\mvnw.cmd clean install -DskipTests
 
-# ATAU menggunakan Maven Wrapper (tidak perlu install Maven)
-# Windows:
-mvnw.cmd clean install
-
-# Linux/Mac:
-./mvnw clean install
+# Jalankan aplikasi
+.\mvnw.cmd spring-boot:run
 ```
 
-Proses ini akan:
-
-- Download semua dependencies yang dibutuhkan
-- Compile source code
-- Membuat file WAR di folder `target/`
-
-⏱️ **Waktu**: ~2-5 menit (tergantung koneksi internet untuk pertama kali)
-
----
-
-## 🚀 Menjalankan Aplikasi
-
-### **Opsi 1: Menggunakan Maven Spring Boot Plugin (REKOMENDASI)**
+#### Linux/MacOS:
 
 ```bash
-# Windows:
-mvnw.cmd spring-boot:run
+# Berikan permission
+chmod +x mvnw
 
-# Linux/Mac:
+# Build project
+./mvnw clean install -DskipTests
+
+# Jalankan aplikasi
 ./mvnw spring-boot:run
 ```
 
-### **Opsi 2: Menjalankan File WAR**
+### Langkah 5: Akses Aplikasi
 
-```bash
-java -jar target/pbo-0.0.1-SNAPSHOT.war
-```
-
-### **Opsi 3: Dari IDE (IntelliJ IDEA / Eclipse)**
-
-1. Buka project sebagai Maven project
-2. Cari file `PboApplication.java`
-3. Klik kanan → Run `PboApplication.main()`
-
----
-
-## 🌐 Akses Aplikasi
-
-Setelah aplikasi berjalan, buka browser dan akses:
+Buka browser dan akses:
 
 ```
 http://localhost:8080
 ```
 
-✅ **Jika berhasil**, Anda akan melihat halaman home FlyBook!
+---
+
+## Akun Default
+
+### Admin Account
+
+| Field    | Value               |
+| -------- | ------------------- |
+| Email    | `admin@flybook.com` |
+| Password | `admin123`          |
+
+> **Note:** Jalankan `reset-admin.bat` jika akun admin perlu direset
+
+### Membuat Akun User
+
+1. Buka `http://localhost:8080/register`
+2. Isi form registrasi
+3. Login dengan akun yang sudah dibuat
 
 ---
 
-## 🔐 Login Akun Default
-
-Aplikasi sudah dilengkapi dengan 2 akun default:
-
-### **Admin Account**
+## Struktur Project
 
 ```
-Email    : admin@flybook.com
-Password : admin123
-```
-
-**Akses**: Dashboard admin, kelola tiket, lihat semua booking
-
-### **User Account**
-
-```
-Email    : user@flybook.com
-Password : user123
-```
-
-**Akses**: Cari tiket, booking tiket, lihat booking saya
-
-> 💡 **Tips**: Anda juga bisa membuat akun baru melalui halaman Register
-
----
-
-## 🐛 Troubleshooting
-
-### **Problem 1: Port 8080 Sudah Digunakan**
-
-**Error**: `Port 8080 is already in use`
-
-**Solusi**:
-
-```yaml
-# Tambahkan di application.yaml
-server:
-  port: 8081 # Ganti ke port lain
-```
-
-### **Problem 2: Database Connection Failed**
-
-**Error**: `Connection refused` atau `Authentication failed`
-
-**Checklist**:
-
-- ✅ PostgreSQL service sudah running?
-  ```bash
-  # Windows: Cek di Services (Win+R → services.msc)
-  # Cari "postgresql-x64-xx"
-  ```
-- ✅ Username dan password di `application.yaml` sudah benar?
-- ✅ Database `flybook` sudah dibuat?
-  ```sql
-  # Login psql dan cek
-  \l
-  ```
-- ✅ Firewall tidak memblokir port 5432?
-
-### **Problem 3: Tabel Tidak Ditemukan**
-
-**Error**: `ERROR: relation "users" does not exist`
-
-**Solusi**:
-
-```bash
-# Jalankan ulang setup database
-setup-database.bat
-
-# Atau manual
-psql -U postgres -d flybook -f src/main/resources/users_schema.sql
-```
-
-### **Problem 4: JSP Tidak Muncul / 404 Error**
-
-**Checklist**:
-
-- ✅ Pastikan `tomcat-embed-jasper` ada di pom.xml
-- ✅ Cek path view di application.yaml: `/WEB-INF/views/`
-- ✅ File JSP ada di `src/main/webapp/WEB-INF/views/`
-- ✅ Restart aplikasi setelah perubahan
-
-### **Problem 5: Maven Build Gagal**
-
-**Error**: `Failed to resolve dependencies`
-
-**Solusi**:
-
-```bash
-# Clear Maven cache dan rebuild
-mvn clean
-mvn dependency:purge-local-repository
-mvn clean install
-```
-
-### **Problem 6: Reset Password Admin**
-
-Jika lupa password admin, jalankan:
-
-```bash
-# Windows
-reset-admin.bat
-
-# Manual
-psql -U postgres -d flybook -f src/main/resources/reset-admin.sql
-```
-
----
-
-## 📁 Struktur Project
-
-```
-pbo/
+flybook/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/flybook/pbo/
-│   │   │   ├── controller/      # Controller layer
-│   │   │   ├── service/         # Business logic
-│   │   │   ├── repository/      # Database access
-│   │   │   ├── model/           # Entity classes
-│   │   │   └── database/        # Database config
+│   │   │   ├── controller/     # HTTP Request Handlers
+│   │   │   ├── model/          # Entity Classes
+│   │   │   ├── repository/     # Database Access Layer
+│   │   │   ├── service/        # Business Logic
+│   │   │   └── database/       # Database Configuration
 │   │   ├── resources/
-│   │   │   ├── application.yaml     # Konfigurasi utama
-│   │   │   ├── users_schema.sql     # Schema tabel users
-│   │   │   ├── tiket_schema.sql     # Schema tabel tiket
-│   │   │   └── booking_schema.sql   # Schema tabel booking
-│   │   └── webapp/WEB-INF/views/    # JSP files
-│   └── test/                        # Unit tests
-├── pom.xml                          # Maven dependencies
-├── setup-database.bat               # Setup database otomatis
-├── reset-admin.bat                  # Reset admin password
-└── README.md                        # Dokumentasi ini
+│   │   │   ├── application.yaml    # App Configuration
+│   │   │   └── *.sql               # SQL Scripts
+│   │   └── webapp/WEB-INF/views/   # JSP Templates
+│   └── test/                   # Unit Tests
+├── deploy/                     # Deployment Scripts
+├── .github/workflows/          # CI/CD Configuration
+├── pom.xml                     # Maven Dependencies
+└── README.md
 ```
 
 ---
 
-## 🎯 Fitur Aplikasi
+## Tech Stack
 
-### **Untuk Admin:**
-
-- ✅ Kelola tiket pesawat (CRUD)
-- ✅ Lihat semua booking pengguna
-- ✅ Dashboard statistik
-
-### **Untuk User:**
-
-- ✅ Registrasi dan login
-- ✅ Cari tiket berdasarkan rute dan tanggal
-- ✅ Booking tiket
-- ✅ Lihat riwayat booking
-- ✅ Detail tiket
+| Kategori   | Teknologi                  |
+| ---------- | -------------------------- |
+| Backend    | Spring Boot 3.x, Java 21   |
+| Frontend   | JSP, Tailwind CSS, DaisyUI |
+| Database   | PostgreSQL                 |
+| Build Tool | Maven                      |
+| Icons      | Font Awesome 6             |
+| Font       | Plus Jakarta Sans          |
 
 ---
 
-## Catatan Penting
+## Script Bantuan
 
-1. **Password PostgreSQL**: Default script menggunakan password `Root`. Sesuaikan di `setup-database.bat` dan `application.yaml` jika berbeda.
-
-2. **Java Version**: Aplikasi ini membutuhkan **Java 21**. Tidak kompatibel dengan Java 8 atau 11.
-
-3. **Development Mode**: Setting `spring.jpa.hibernate.ddl-auto: update` akan otomatis update schema. Untuk production, ganti ke `validate`.
-
-4. **Port Default**: Aplikasi berjalan di port `8080`. Bisa diubah di `application.yaml`.
+| Script                   | Fungsi                        |
+| ------------------------ | ----------------------------- |
+| `setup-database.bat`     | Membuat database dan tabel    |
+| `reset-admin.bat`        | Reset akun admin ke default   |
+| `insert-sample-data.bat` | Menambahkan data tiket contoh |
 
 ---
 
-## Butuh Bantuan?
+## Troubleshooting
 
-Jika masih ada masalah:
+### Error: Database connection failed
 
-1. Cek file `DATABASE_SETUP.md` untuk detail setup database
-2. Cek file `FITUR_BOOKING.md` untuk dokumentasi fitur
-3. Lihat log error di console untuk detail masalah
-4. Pastikan semua persyaratan sistem terpenuhi
+```
+Pastikan PostgreSQL sudah running:
+pg_isready -h localhost -p 5432
 
----
+Cek username dan password di application.yaml
+```
 
-##  Quick Start (TL;DR)
+### Error: Port 8080 already in use
 
 ```bash
-# 1. Buat database
-psql -U postgres -c "CREATE DATABASE flybook;"
+# Windows - cari proses yang menggunakan port 8080
+netstat -ano | findstr :8080
 
-# 2. Setup tables
-setup-database.bat
+# Kill proses
+taskkill /PID <PID_NUMBER> /F
+```
 
-# 3. Sesuaikan application.yaml dengan kredensial PostgreSQL Anda
+### Error: Java version tidak sesuai
 
-# 4. Run aplikasi
-mvnw.cmd spring-boot:run
+```bash
+# Cek versi Java
+java -version
 
-# 5. Buka browser
-http://localhost:8080
+# Pastikan JAVA_HOME mengarah ke JDK 21+
+echo %JAVA_HOME%
+```
 
-# 6. Login dengan:
-# Admin: admin@flybook.com / admin123
-# User: user@flybook.com / user123
+### Error: Maven build failed
+
+```bash
+# Clean dan rebuild
+.\mvnw.cmd clean install -DskipTests -U
 ```
 
 ---
+
