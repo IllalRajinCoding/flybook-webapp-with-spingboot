@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <script>
@@ -29,7 +29,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlyBook | Global Aviation Portal</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -50,10 +50,10 @@
         .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #f1f5f9; }
         .hero-gradient { background: radial-gradient(circle at 70% 30%, #f0f7ff 0%, #ffffff 100%); }
         .pro-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; }
-        .pro-input { 
-            border: 1.5px solid #cbd5e1 !important; 
-            border-radius: 0.5rem !important; 
-            font-weight: 600; 
+        .pro-input {
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 0.5rem !important;
+            font-weight: 600;
             color: #0f172a !important;
             background-color: #ffffff !important;
         }
@@ -76,6 +76,8 @@
                     <li><a href="#about">Tentang Kami</a></li>
                     <li><a href="#services">Layanan</a></li>
                     <li><a href="#search">Cari Tiket</a></li>
+                    <li><a href="/gallery">Gallery</a></li>
+
                 </ul>
             </div>
             <a href="/" class="flex items-center gap-2">
@@ -195,7 +197,7 @@
                 </div>
             </div>
             <div class="relative hidden lg:block">
-                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800" 
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800"
                      class="rounded shadow-2xl relative z-10 grayscale hover:grayscale-0 transition duration-1000" alt="About">
             </div>
         </div>
@@ -208,7 +210,7 @@
                 <h2 class="text-5xl font-black text-dark tracking-tighter uppercase mb-6">World Class Ecosystem</h2>
                 <p class="text-slate-400 text-sm font-bold uppercase tracking-widest">Eksklusivitas dalam setiap proses reservasi.</p>
             </div>
-            
+
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="pro-card p-12 bg-white hover:border-brand transition-all">
                     <div class="w-12 h-12 bg-blue-50 text-brand rounded flex items-center justify-center text-xl mb-8"><i class="fas fa-shield-halved"></i></div>
@@ -267,7 +269,7 @@
 
             addOption(originSelect, "Search Origin", "");
             uniqueOrigins.sort().forEach(city => addOption(originSelect, city, city));
-            
+
             addOption(destSelect, "Search Destination", "");
             uniqueDests.sort().forEach(city => addOption(destSelect, city, city));
         });
@@ -287,8 +289,8 @@
                 const dest = document.getElementById("dest").value;
                 const date = document.getElementById("date").value;
 
-                const filtered = FLIGHT_DATABASE.filter(f => 
-                    (!origin || f.asal === origin) && 
+                const filtered = FLIGHT_DATABASE.filter(f =>
+                    (!origin || f.asal === origin) &&
                     (!dest || f.tujuan === dest) &&
                     (!date || f.tanggal === date)
                 );
