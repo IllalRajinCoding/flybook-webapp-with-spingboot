@@ -60,6 +60,13 @@ public class BookingService {
     }
 
     /**
+     * Get booking by username and tiket ID
+     */
+    public static Booking getBookingByUserAndTiket(String userName, int tiketId) {
+        return BookingRepository.getByUserAndTiket(userName, tiketId);
+    }
+
+    /**
      * Update booking status
      */
     public static boolean updateBookingStatus(int id, String status) {

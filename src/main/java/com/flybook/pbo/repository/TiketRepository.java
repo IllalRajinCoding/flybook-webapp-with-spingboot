@@ -14,6 +14,23 @@ import com.flybook.pbo.model.Tiket;
 public class TiketRepository {
 
     /**
+     * Check if nomor tiket already exists
+     */
+    public static boolean existsByNomorTiket(String nomorTiket) {
+        String sql = "SELECT COUNT(*) FROM tiket WHERE nomor_tiket = ?";
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nomorTiket);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking nomor tiket: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * Create new tiket
      */
     public static boolean create(Tiket tiket) {

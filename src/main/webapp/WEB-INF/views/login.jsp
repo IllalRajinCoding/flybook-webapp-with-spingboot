@@ -63,8 +63,8 @@
                 </div>
                 <span class="text-3xl font-black italic tracking-tighter text-dark">FlyBook</span>
             </a>
-            <h2 class="text-2xl font-black text-dark mt-6 tracking-tight">Otentikasi Pengguna</h2>
-            <p class="text-slate-500 font-medium mt-1 text-sm text-center">Silakan masukkan kredensial Anda untuk mengakses sistem.</p>
+            <h2 class="text-2xl font-black text-dark mt-6 tracking-tight">Login</h2>
+            <p class="text-slate-500 font-medium mt-1 text-sm text-center">Silahkan Masukan Email dan Password Anda</p>
         </div>
 
         <div class="w-full max-w-md">
@@ -88,7 +88,7 @@
                 <form action="/login" method="POST" class="space-y-6">
                     
                     <div class="form-control">
-                        <label class="form-label">Alamat Email Resmi</label>
+                        <label class="form-label">Email</label>
                         <div class="relative group">
                             <i class="fas fa-envelope absolute left-4 top-3.5 text-slate-300 group-focus-within:text-accent transition-colors"></i>
                             <input 
@@ -103,7 +103,7 @@
 
                     <div class="form-control">
                         <div class="flex justify-between items-center mb-2">
-                            <label class="form-label !mb-0">Kata Sandi Akun</label>
+                            <label class="form-label !mb-0">Password</label>
                             <a href="#" class="text-[10px] font-bold text-accent hover:underline uppercase tracking-tighter">Lupa Sandi?</a>
                         </div>
                         <div class="relative group">
@@ -120,7 +120,7 @@
 
                     <div class="pt-4">
                         <button type="submit" class="btn bg-dark hover:bg-black text-white w-full h-12 rounded-lg font-black uppercase tracking-[0.1em] border-none shadow-xl shadow-slate-200 transition-all active:scale-95">
-                            Masuk Ke Sistem
+                            Masuk
                         </button>
                     </div>
                 </form>
@@ -134,7 +134,7 @@
 
             <div class="mt-8 text-center">
                 <p class="text-sm font-bold text-slate-500">
-                    Belum memiliki kredensial? 
+                    Belum punya Akun? 
                     <a href="/register" class="text-accent hover:underline ml-1">Daftar Akun Baru</a>
                 </p>
             </div>

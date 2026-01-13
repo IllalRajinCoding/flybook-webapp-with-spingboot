@@ -92,6 +92,7 @@
                 <li><a href="#about" class="hover:text-brand transition-colors">About</a></li>
                 <li><a href="#services" class="hover:text-brand transition-colors">Services</a></li>
                 <li><a href="#search" class="hover:text-brand transition-colors">Reservasi</a></li>
+                <li><a href="/gallery" class="hover:text-brand transition-colors">Gallery</a></li>
             </ul>
         </div>
 
@@ -160,6 +161,9 @@
             </div>
         </div>
     </section>
+
+    <!-- tia hapus ini -->
+     <!-- dzikra hapus ini -->
 
     <main id="results" class="container mx-auto px-6 py-32 hidden">
         <div class="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6 border-b border-slate-100 pb-10">

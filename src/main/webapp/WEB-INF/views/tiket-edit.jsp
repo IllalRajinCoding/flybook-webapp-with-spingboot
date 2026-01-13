@@ -219,5 +219,49 @@
         <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300">FlyBook Management — Enterprise Edition 2026</p>
     </footer>
 
+    <!-- Toast Container -->
+    <div id="toast" class="toast toast-top toast-end z-50 hidden">
+        <div id="toast-alert" class="alert bg-red-50 border border-red-200 text-red-800 shadow-lg">
+            <i id="toast-icon" class="fas fa-exclamation-circle text-red-500"></i>
+            <span id="toast-message" class="font-bold">Message</span>
+        </div>
+    </div>
+
+    <script>
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toastIcon.className = 'fas fa-check-circle text-emerald-500';
+                document.getElementById('toast-alert').className = 'alert bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-lg';
+            } else {
+                toastIcon.className = 'fas fa-exclamation-circle text-red-500';
+                document.getElementById('toast-alert').className = 'alert bg-red-50 border border-red-200 text-red-800 shadow-lg';
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Show toast if flash message exists
+        <c:if test="${not empty error}">
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('${error}', 'error');
+            });
+        </c:if>
+        <c:if test="${not empty success}">
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('${success}', 'success');
+            });
+        </c:if>
+    </script>
+
 </body>
 </html>

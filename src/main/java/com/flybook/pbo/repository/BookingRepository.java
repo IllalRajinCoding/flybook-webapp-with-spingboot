@@ -115,6 +115,33 @@ public class BookingRepository {
     }
 
     /**
+     * Get booking by username and tiket ID
+     */
+    public static Booking getByUserAndTiket(String userName, int tiketId) {
+        String sql = "SELECT b.*, t.nomor_tiket, t.maskapai, t.penerbangan, "
+                + "t.bandara_asal, t.bandara_tujuan, t.tanggal_berangkat, "
+                + "t.jam_berangkat, t.jam_tiba "
+                + "FROM booking b "
+                + "JOIN tiket t ON b.tiket_id = t.id "
+                + "WHERE b.user_name = ? AND b.tiket_id = ? "
+                + "ORDER BY b.tanggal_booking DESC LIMIT 1";
+
+        try (Connection conn = DatabaseConfig.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userName);
+            pstmt.setInt(2, tiketId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToBooking(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching booking by user and tiket: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Update booking status
      */
     public static boolean updateStatus(int id, String status) {

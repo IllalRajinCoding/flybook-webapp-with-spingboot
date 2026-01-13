@@ -1,11 +1,18 @@
 package com.flybook.pbo.service;
 
-import com.flybook.pbo.model.Tiket;
-import com.flybook.pbo.repository.TiketRepository;
 import java.util.List;
 
+import com.flybook.pbo.model.Tiket;
+import com.flybook.pbo.repository.TiketRepository;
 
 public class TiketService {
+
+    /**
+     * Check if nomor tiket already exists
+     */
+    public static boolean isNomorTiketExists(String nomorTiket) {
+        return TiketRepository.existsByNomorTiket(nomorTiket);
+    }
 
     /**
      * Create new tiket
@@ -15,6 +22,10 @@ public class TiketService {
             return false;
         }
         if (tiket.getMaskapai() == null || tiket.getMaskapai().isEmpty()) {
+            return false;
+        }
+        // Check for duplicate nomor tiket
+        if (TiketRepository.existsByNomorTiket(tiket.getNomorTiket())) {
             return false;
         }
         return TiketRepository.create(tiket);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.flybook.pbo.model.Booking;
 import com.flybook.pbo.model.Tiket;
@@ -71,12 +72,21 @@ public class DashboardController {
     }
 
     @PostMapping("/admin/tiket/store")
-    public String storeTiket(@ModelAttribute Tiket tiket) {
-        tiket.setUserId(1); // TODO: Get actual user ID from session
-        if (TiketService.tambahTiket(tiket)) {
-            return "redirect:/dashboard/admin";
+    public String storeTiket(@ModelAttribute Tiket tiket, RedirectAttributes redirectAttributes) {
+        tiket.setUserId(1);
+
+        // Check if nomor tiket already exists
+        if (TiketService.isNomorTiketExists(tiket.getNomorTiket())) {
+            redirectAttributes.addFlashAttribute("error", "Nomor penerbangan '" + tiket.getNomorTiket() + "' sudah ada!");
+            return "redirect:/dashboard/admin/tiket/create";
         }
-        return "tiket-create";
+
+        if (TiketService.tambahTiket(tiket)) {
+            redirectAttributes.addFlashAttribute("success", "Tiket berhasil ditambahkan!");
+            return "redirect:/dashboard/admin?tab=tickets";
+        }
+        redirectAttributes.addFlashAttribute("error", "Gagal menambahkan tiket.");
+        return "redirect:/dashboard/admin/tiket/create";
     }
 
     @GetMapping("/admin/tiket/{id}/edit")
@@ -90,54 +100,80 @@ public class DashboardController {
     }
 
     @PostMapping("/admin/tiket/{id}/update")
-    public String updateTiket(@PathVariable int id, @ModelAttribute Tiket tiket, Model model) {
+    public String updateTiket(@PathVariable int id, @ModelAttribute Tiket tiket, Model model, RedirectAttributes redirectAttributes) {
         tiket.setId(id);
         if (TiketService.updateTiket(tiket)) {
-            return "redirect:/dashboard/admin";
+            redirectAttributes.addFlashAttribute("success", "Tiket berhasil diperbarui!");
+            return "redirect:/dashboard/admin?tab=tickets";
         }
+        redirectAttributes.addFlashAttribute("error", "Gagal memperbarui tiket.");
         model.addAttribute("tiket", tiket);
         return "tiket-edit";
     }
 
     @GetMapping("/admin/tiket/{id}/delete")
-    public String deleteTiket(@PathVariable int id) {
-        TiketService.hapusTiket(id);
-        return "redirect:/dashboard/admin";
+    public String deleteTiket(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        if (TiketService.hapusTiket(id)) {
+            redirectAttributes.addFlashAttribute("success", "Tiket berhasil dihapus!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Gagal menghapus tiket.");
+        }
+        return "redirect:/dashboard/admin?tab=tickets";
     }
 
     @GetMapping("/user/tiket/{id}/book")
-    public String bookTiket(@PathVariable int id, @RequestParam(defaultValue = "1") int seats, HttpSession session) {
+    public String bookTiket(@PathVariable int id, @RequestParam(defaultValue = "1") int seats, HttpSession session, RedirectAttributes redirectAttributes) {
         String userName = (String) session.getAttribute("userName");
         if (userName == null) {
             return "redirect:/login";
         }
 
         if (BookingService.createBooking(id, userName, seats)) {
-            return "redirect:/dashboard/user?message=booking_success";
+            redirectAttributes.addFlashAttribute("success", "Pembelian berhasil! Mohon tunggu konfirmasi dari admin.");
+            return "redirect:/dashboard/user";
         }
-        return "redirect:/dashboard/user?message=booking_failed";
+        redirectAttributes.addFlashAttribute("error", "Gagal melakukan pemesanan. Kursi mungkin sudah tidak tersedia.");
+        return "redirect:/dashboard/tiket/" + id;
     }
 
     // ==================== BOOKING MANAGEMENT ====================
     @PostMapping("/admin/booking/{id}/status")
-    public String updateBookingStatus(@PathVariable int id, @RequestParam String status) {
-        BookingService.updateBookingStatus(id, status);
+    public String updateBookingStatus(@PathVariable int id, @RequestParam String status, RedirectAttributes redirectAttributes) {
+        if (BookingService.updateBookingStatus(id, status)) {
+            redirectAttributes.addFlashAttribute("success", "Status pesanan berhasil diubah menjadi '" + status + "'!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Gagal mengubah status pesanan.");
+        }
         return "redirect:/dashboard/admin";
     }
 
     @PostMapping("/admin/booking/{id}/delete")
-    public String deleteBooking(@PathVariable int id) {
-        BookingService.deleteBooking(id);
+    public String deleteBooking(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        if (BookingService.deleteBooking(id)) {
+            redirectAttributes.addFlashAttribute("success", "Pesanan berhasil dihapus!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Gagal menghapus pesanan.");
+        }
         return "redirect:/dashboard/admin";
     }
 
     @GetMapping("/tiket/{id}")
-    public String viewTiket(@PathVariable int id, Model model) {
+    public String viewTiket(@PathVariable int id, Model model, HttpSession session) {
         Tiket tiket = TiketService.getTiketById(id);
         if (tiket != null) {
             model.addAttribute("tiket", tiket);
             int availableSeats = TiketService.getAvailableSeats(id);
             model.addAttribute("availableSeats", availableSeats);
+
+            // Check if user has booking for this ticket
+            String userName = (String) session.getAttribute("userName");
+            if (userName != null) {
+                Booking userBooking = BookingService.getBookingByUserAndTiket(userName, id);
+                if (userBooking != null) {
+                    model.addAttribute("booking", userBooking);
+                }
+            }
+
             return "tiket-detail";
         }
         return "redirect:/dashboard/user";
@@ -164,31 +200,31 @@ public class DashboardController {
     }
 
     @PostMapping("/user/booking/{id}/update")
-    public String updateUserBooking(@PathVariable int id, @RequestParam int jumlahKursi, HttpSession session) {
+    public String updateUserBooking(@PathVariable int id, @RequestParam int jumlahKursi, HttpSession session, RedirectAttributes redirectAttributes) {
         String userName = (String) session.getAttribute("userName");
         if (userName == null) {
             return "redirect:/login";
         }
 
         if (BookingService.updateUserBooking(id, userName, jumlahKursi)) {
-            session.setAttribute("successMsg", "Pesanan berhasil diupdate!");
+            redirectAttributes.addFlashAttribute("success", "Pesanan berhasil diupdate!");
         } else {
-            session.setAttribute("errorMsg", "Gagal mengupdate pesanan.");
+            redirectAttributes.addFlashAttribute("error", "Gagal mengupdate pesanan.");
         }
         return "redirect:/dashboard/user";
     }
 
     @PostMapping("/user/booking/{id}/delete")
-    public String deleteUserBooking(@PathVariable int id, HttpSession session) {
+    public String deleteUserBooking(@PathVariable int id, HttpSession session, RedirectAttributes redirectAttributes) {
         String userName = (String) session.getAttribute("userName");
         if (userName == null) {
             return "redirect:/login";
         }
 
         if (BookingService.deleteUserBooking(id, userName)) {
-            session.setAttribute("successMsg", "Pesanan berhasil dibatalkan!");
+            redirectAttributes.addFlashAttribute("success", "Pesanan berhasil dibatalkan!");
         } else {
-            session.setAttribute("errorMsg", "Gagal membatalkan pesanan.");
+            redirectAttributes.addFlashAttribute("error", "Gagal membatalkan pesanan.");
         }
         return "redirect:/dashboard/user";
     }

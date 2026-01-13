@@ -221,7 +221,8 @@
         </div>
 
         <aside class="drawer-side z-40">
-            <label for="admin-drawer" class="drawer-overlay"></label>
+            <label for="admin-drawer" class="drawer-overlay">
+            </label>
             <div class="w-64 min-h-screen bg-white border-r border-slate-200 flex flex-col p-6">
                 <div class="flex items-center gap-3 mb-10 px-2">
                     <div class="w-10 h-10 bg-brand rounded flex items-center justify-center text-white shadow-lg shadow-blue-200"><i class="fas fa-plane-up"></i></div>
@@ -286,6 +287,60 @@
             const rows = document.querySelectorAll(".tiket-row");
             rows.forEach(row => { row.style.display = row.textContent.toLowerCase().includes(input) ? "" : "none"; });
         }
+
+        // Toast functions
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toast.className = 'toast toast-top toast-end z-50';
+                toastIcon.className = 'fas fa-check-circle text-emerald-500';
+                document.getElementById('toast-alert').className = 'alert bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-lg';
+            } else {
+                toast.className = 'toast toast-top toast-end z-50';
+                toastIcon.className = 'fas fa-exclamation-circle text-red-500';
+                document.getElementById('toast-alert').className = 'alert bg-red-50 border border-red-200 text-red-800 shadow-lg';
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Check URL params for tab switching
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            if (tab === 'tickets') {
+                switchTab('tickets');
+            }
+        });
+
+        // Show toast if flash message exists
+        <c:if test="${not empty success}">
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('${success}', 'success');
+            });
+        </c:if>
+        <c:if test="${not empty error}">
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('${error}', 'error');
+            });
+        </c:if>
     </script>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast toast-top toast-end z-50 hidden">
+        <div id="toast-alert" class="alert bg-emerald-50 border border-emerald-200 text-emerald-800 shadow-lg">
+            <i id="toast-icon" class="fas fa-check-circle text-emerald-500"></i>
+            <span id="toast-message" class="font-bold">Message</span>
+        </div>
+    </div>
 </body>
 </html>

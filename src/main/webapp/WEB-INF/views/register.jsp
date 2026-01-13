@@ -85,7 +85,7 @@
                             <input 
                                 type="text" 
                                 name="name" 
-                                placeholder="Contoh: Budi Santoso" 
+                                placeholder="Nama Lengkap Anda"
                                 required 
                                 class="input input-bordered pro-input w-full pl-11 shadow-sm" 
                             />
@@ -99,7 +99,7 @@
                             <input 
                                 type="email" 
                                 name="email" 
-                                placeholder="nama@email.com" 
+                                placeholder="Email Anda" 
                                 required 
                                 class="input input-bordered pro-input w-full pl-11 shadow-sm" 
                             />
@@ -107,7 +107,7 @@
                     </div>
 
                     <div class="form-control">
-                        <label class="form-label">Kata Sandi Akun</label>
+                        <label class="form-label">Password</label>
                         <div class="relative group">
                             <i class="fas fa-shield-halved absolute left-4 top-3.5 text-slate-300 group-focus-within:text-accent transition-colors"></i>
                             <input 
@@ -122,13 +122,13 @@
                     </div>
 
                     <div class="form-control">
-                        <label class="form-label">Konfirmasi Kata Sandi</label>
+                        <label class="form-label">Konfirmasi Password</label>
                         <div class="relative group">
                             <i class="fas fa-check-double absolute left-4 top-3.5 text-slate-300 group-focus-within:text-accent transition-colors"></i>
                             <input 
                                 type="password" 
                                 name="confirmPassword" 
-                                placeholder="Ulangi kata sandi Anda" 
+                                placeholder="Ulangi password Anda" 
                                 required 
                                 class="input input-bordered pro-input w-full pl-11 shadow-sm" 
                             />
@@ -150,8 +150,8 @@
 
             <div class="mt-8 text-center">
                 <p class="text-sm font-bold text-slate-500">
-                    Sudah memiliki akun terdaftar? 
-                    <a href="/login" class="text-accent hover:underline ml-1">Masuk Ke Sistem</a>
+                    Sudah punya Akun? 
+                    <a href="/login" class="text-accent hover:underline ml-1">Masuk</a>
                 </p>
             </div>
         </div>
