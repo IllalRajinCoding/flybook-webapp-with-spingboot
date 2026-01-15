@@ -164,7 +164,6 @@
         </div>
     </section>
 
-    <!-- tia hapus ini -->
      <!-- dzikra hapus ini -->
 
     <main id="results" class="container mx-auto px-6 py-32 hidden">
