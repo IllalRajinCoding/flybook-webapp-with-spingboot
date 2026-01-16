@@ -93,7 +93,6 @@
                 <li><a href="/" class="hover:text-brand transition-colors text-dark">Home</a></li>
                 <li><a href="#about" class="hover:text-brand transition-colors">About</a></li>
                 <li><a href="#services" class="hover:text-brand transition-colors">Services</a></li>
-                <li><a href="#search" class="hover:text-brand transition-colors">Reservasi</a></li>
                 <li><a href="/gallery" class="hover:text-brand transition-colors">Gallery</a></li>
             </ul>
         </div>

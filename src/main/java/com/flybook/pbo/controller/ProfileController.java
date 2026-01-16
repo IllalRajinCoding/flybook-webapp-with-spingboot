@@ -125,7 +125,7 @@ public class ProfileController {
         boolean success = UserService.changePassword(userId, currentPassword, newPassword);
 
         if (success) {
-            redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully");
+            redirectAttributes.addFlashAttribute("successMessage", "Password berhasil di update");
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Current password is incorrect");
         }
